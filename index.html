@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HPanel Vault</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lalezar&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0a09;
+      --text: #fff6ea;
+      --muted: #c3b09a;
+      --line: rgba(255, 186, 92, .22);
+      --gold: #ffb43a;
+      --gold2: #ffe08a;
+      --mint: #3ee39a;
+      --ink: #140f0a;
+      --shadow: 0 28px 70px rgba(0,0,0,.55);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Lalezar, Tahoma, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 12% 0%, rgba(255,180,58,.18), transparent 32%),
+        radial-gradient(circle at 92% 18%, rgba(62,227,154,.10), transparent 28%),
+        linear-gradient(180deg, #120e0b, #070605);
+    }
+    .gold { color: var(--gold); }
+    .login-modal {
+      position: fixed; inset: 0; z-index: 1000;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(8,6,4,.78); backdrop-filter: blur(16px);
+      opacity: 1; visibility: visible;
+      transition: opacity .35s ease, visibility .35s ease;
+    }
+    .login-modal.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+    .card-box {
+      width: min(520px, calc(100% - 32px));
+      padding: 30px 26px; border-radius: 28px;
+      border: 1px solid var(--line);
+      background: linear-gradient(165deg, rgba(255,180,58,.12), rgba(255,255,255,.03));
+      box-shadow: var(--shadow); text-align: center;
+      transform: translateY(0);
+      transition: transform .35s ease, opacity .35s ease;
+    }
+    .login-modal.hidden .card-box { transform: translateY(12px); opacity: 0; }
+    h1, h2 { margin: 0 0 8px; }
+    .sub { margin: 0 0 16px; color: var(--muted); font-size: 16px; }
+    .field { text-align: right; margin-bottom: 10px; }
+    .field label { display: block; margin-bottom: 6px; color: var(--gold); font-size: 15px; }
+    input {
+      width: 100%; padding: 13px 14px; border-radius: 14px;
+      border: 1px solid var(--line); background: rgba(0,0,0,.38);
+      color: var(--text); outline: none; font-family: inherit; font-size: 16px;
+      transition: border-color .25s ease, background .25s ease;
+    }
+    input:focus { border-color: rgba(255,180,58,.55); }
+    .ltr { direction: ltr; text-align: left; unicode-bidi: isolate; }
+    .btn {
+      border: 0; cursor: pointer; border-radius: 16px; padding: 12px 14px;
+      font-family: inherit; font-size: 17px;
+      box-shadow: 0 6px 0 rgba(0,0,0,.35);
+      display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+      transition: transform .18s ease, box-shadow .18s ease, opacity .18s ease;
+    }
+    .btn:active:not(:disabled) { transform: translateY(3px); box-shadow: 0 3px 0 rgba(0,0,0,.35); }
+    .btn:disabled { opacity: .4; cursor: not-allowed; }
+    .btn-gold { background: linear-gradient(180deg, #ffd27a, #ff9d1f); color: var(--ink); }
+    .btn-mint { background: linear-gradient(180deg, #6af3b8, #17c77a); color: #042016; }
+    .btn-rose { background: linear-gradient(180deg, #ff8a97, #e23b4d); color: #fff; }
+    .btn-home { background: linear-gradient(180deg, #8ab0ff, #4d7dff); color: #061018; text-decoration:none; }
+    .btn-refresh {
+      background: linear-gradient(180deg, #7dfff0, #19c4b8);
+      color: #04221f;
+      border: 1px solid rgba(125,255,240,.45);
+    }
+    .btn-ghost { background: rgba(255,255,255,.06); color: var(--text); border: 1px solid var(--line); box-shadow: none; }
+    .spin {
+      width: 16px; height: 16px; border-radius: 50%;
+      border: 2px solid rgba(20,15,10,.25); border-top-color: var(--ink);
+      display: inline-block; flex: 0 0 16px;
+      animation: spin .7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .app {
+      width: min(900px, calc(100% - 30px));
+      margin: auto; padding: 36px 0 80px;
+      opacity: 0; transform: translateY(12px); pointer-events: none; transition: .35s ease;
+    }
+    .app.visible { opacity: 1; transform: none; pointer-events: auto; }
+    .hero { display: flex; justify-content: space-between; gap: 16px; align-items: center; flex-wrap: wrap; margin-bottom: 18px; }
+    .brand { font-size: clamp(28px, 5vw, 44px); }
+    .hero-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .panel {
+      padding: 16px; border-radius: 22px; border: 1px solid var(--line);
+      background: rgba(255,255,255,.03);
+    }
+    .hint { color: var(--muted); font-size: 14px; margin: 0 0 12px; text-align: right; }
+    .item {
+      padding: 14px 16px; border-radius: 16px; margin-bottom: 10px;
+      border: 1px solid var(--line); background: rgba(255,255,255,.04);
+      transition: background .25s ease, transform .25s ease;
+    }
+    .item:hover { background: rgba(255,255,255,.08); transform: translateY(-2px); }
+    .item-title { font-size: 20px; }
+    .token-box {
+      margin-top: 8px; padding: 10px 12px; border-radius: 12px;
+      background: rgba(0,0,0,.28); word-break: break-all;
+      font-size: 13px; color: var(--muted);
+    }
+    .row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+    .row .btn { flex: 1; min-width: 90px; }
+    .empty { color: var(--muted); text-align: center; padding: 24px 8px; }
+    .toast-box { position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%); width: min(420px, calc(100% - 28px)); z-index: 2000; }
+    .toast {
+      margin-top: 8px; padding: 12px 14px; border-radius: 14px;
+      border: 1px solid var(--line); background: rgba(18,14,10,.94);
+      animation: toastIn .25s ease;
+    }
+    .toast.out { animation: toastOut .28s ease forwards; }
+    @keyframes toastIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+    @keyframes toastOut { to { opacity: 0; transform: translateY(12px); } }
+    .ok { color: #9dffc9; } .err { color: #ffb0b7; } .info { color: #ffd27a; }
+    .foot { margin-top: 28px; text-align: center; color: #7a6b5a; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <div id="loginModal" class="login-modal">
+    <div class="card-box">
+      <h1><span class="gold">HP</span>anel <span class="gold">V</span>ault</h1>
+      <p class="sub">رمز گاوصندوق را وارد کن</p>
+      <div class="field">
+        <label for="passInput">رمز</label>
+        <input id="passInput" type="password" placeholder="رمز گاوصندوق">
+      </div>
+      <button id="loginBtn" class="btn btn-gold" style="width:100%;margin-top:8px" onclick="unlockVault()">ورود</button>
+    </div>
+  </div>
+
+  <div class="app" id="app">
+    <div class="hero">
+      <div>
+        <div class="brand"><span class="gold">HP</span>anel <span class="gold">V</span>ault</div>
+        <p class="sub" style="margin:6px 0 0">توکن‌های داشبورد و رادیو</p>
+      </div>
+      <div class="hero-actions">
+        <button class="btn btn-rose" onclick="logout()">خروج</button>
+        <a class="btn btn-home" href="https://herculepanel.github.io/">برگشت به صفحه نخست</a>
+        <button class="btn btn-refresh" onclick="reloadVault()">تازه‌سازی</button>
+      </div>
+    </div>
+    <div class="panel">
+      <p class="hint">بعد از ورود می‌توانی توکن را کپی کنی و در داشبورد یا رادیو استفاده کنی. رمز در گیست تنظیم می‌شود.</p>
+      <div id="list"></div>
+    </div>
+    <div class="foot">© 2026 · <span class="gold">H</span>ercule<span class="gold">P</span>anel</div>
+  </div>
+  <div class="toast-box" id="toasts"></div>
+
+<script>
+const CONFIG = {
+  gistUser: "HerculePanel",
+  gistId: "527872f2eda657540680f9ea15e919cb",
+  gistFile: "vault.json",
+  home: "https://herculepanel.github.io/"
+};
+
+let vaultItems = [];
+let shown = {};
+
+function toast(msg, type) {
+  const el = document.createElement("div");
+  el.className = "toast " + (type === "error" ? "err" : type === "success" ? "ok" : "info");
+  el.textContent = msg;
+  document.getElementById("toasts").appendChild(el);
+  setTimeout(() => { el.classList.add("out"); setTimeout(() => el.remove(), 280); }, 3200);
+}
+function esc(s) {
+  return String(s ?? "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;");
+}
+function maskToken(token) {
+  const t = String(token || "");
+  if (t.length <= 10) return "••••••••";
+  return t.slice(0, 7) + "••••••••" + t.slice(-4);
+}
+function setLoading(on) {
+  const btn = document.getElementById("loginBtn");
+  btn.disabled = on;
+  btn.innerHTML = on ? 'ورود<span class="spin"></span>' : "ورود";
+}
+function showApp() {
+  document.getElementById("loginModal").classList.add("hidden");
+  document.getElementById("app").classList.add("visible");
+}
+function hideApp() {
+  document.getElementById("app").classList.remove("visible");
+  document.getElementById("loginModal").classList.remove("hidden");
+}
+async function loadVaultJson() {
+  if (!CONFIG.gistId || CONFIG.gistId.indexOf("PUT_") === 0) {
+    throw new Error("اول CONFIG.gistId را در html بگذار");
+  }
+  const urls = [
+    "https://gist.githubusercontent.com/" + CONFIG.gistUser + "/" + CONFIG.gistId + "/raw/" + CONFIG.gistFile,
+    "https://gist.githubusercontent.com/" + CONFIG.gistUser + "/" + CONFIG.gistId + "/raw/"
+  ];
+  let lastErr = null;
+  for (const url of urls) {
+    try {
+      const res = await fetch(url + "?t=" + Date.now(), { cache: "no-store" });
+      if (!res.ok) { lastErr = new Error("خواندن گیست ناموفق (" + res.status + ")"); continue; }
+      return JSON.parse(await res.text());
+    } catch (e) { lastErr = e; }
+  }
+  throw lastErr || new Error("خواندن گیست ناموفق");
+}
+function renderList() {
+  const box = document.getElementById("list");
+  if (!vaultItems.length) {
+    box.innerHTML = '<div class="empty">توکنی در گیست نیست.</div>';
+    return;
+  }
+  box.innerHTML = vaultItems.map((item, i) => {
+    const token = String(item.token || "");
+    const open = !!shown[i];
+    return '<div class="item">' +
+      '<div class="item-title">' + esc(item.name || "توکن") + '</div>' +
+      '<div class="token-box ltr">' + esc(open ? token : maskToken(token)) + '</div>' +
+      '<div class="row">' +
+        '<button class="btn btn-gold" onclick="copyToken(' + i + ')">کپی توکن</button>' +
+        '<button class="btn btn-ghost" onclick="toggleToken(' + i + ')">' + (open ? "مخفی" : "نمایش") + '</button>' +
+      '</div>' +
+    '</div>';
+  }).join("");
+}
+async function unlockVault() {
+  const pass = (document.getElementById("passInput").value || "").trim();
+  if (!pass) return toast("رمز را وارد کن", "error");
+  setLoading(true);
+  try {
+    const data = await loadVaultJson();
+    const real = String(data.password || data.pass || "").trim();
+    if (!real || pass !== real) throw new Error("رمز اشتباه است");
+    vaultItems = Array.isArray(data.items) ? data.items : (Array.isArray(data.tokens) ? data.tokens : []);
+    shown = {};
+    showApp();
+    renderList();
+    toast("گاوصندوق باز شد", "success");
+  } catch (e) {
+    vaultItems = [];
+    hideApp();
+    toast(e.message || "ورود ناموفق", "error");
+  } finally {
+    setLoading(false);
+  }
+}
+async function reloadVault() {
+  const pass = (document.getElementById("passInput").value || "").trim();
+  if (!pass) return toast("اول وارد شو", "error");
+  try {
+    const data = await loadVaultJson();
+    if (pass !== String(data.password || data.pass || "").trim()) throw new Error("رمز اشتباه است");
+    vaultItems = Array.isArray(data.items) ? data.items : (Array.isArray(data.tokens) ? data.tokens : []);
+    renderList();
+    toast("تازه‌سازی شد", "success");
+  } catch (e) {
+    toast(e.message || "تازه‌سازی ناموفق", "error");
+  }
+}
+function toggleToken(i) {
+  shown[i] = !shown[i];
+  renderList();
+}
+function copyToken(i) {
+  const token = vaultItems[i] && vaultItems[i].token;
+  if (!token) return;
+  navigator.clipboard.writeText(token).then(
+    () => toast("توکن کپی شد", "success"),
+    () => toast(token, "info")
+  );
+}
+function logout() {
+  vaultItems = [];
+  shown = {};
+  document.getElementById("list").innerHTML = "";
+  document.getElementById("passInput").value = "";
+  hideApp();
+  toast("خارج شدی", "info");
+}
+document.getElementById("passInput").addEventListener("keydown", e => {
+  if (e.key === "Enter") unlockVault();
+});
+</script>
+</body>
+</html>
