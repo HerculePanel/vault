@@ -137,15 +137,14 @@
         <p class="sub" style="margin:6px 0 0">توکن‌های داشبورد و رادیو</p>
       </div>
       <div class="hero-actions">
-        <button class="btn btn-rose" onclick="stopWorkflow()">توقف ورک‌فلو</button>
         <button class="btn btn-rose" onclick="logout()">خروج</button>
         <a class="btn btn-home" href="https://herculepanel.github.io/">برگشت به صفحه نخست</a>
-        <button class="btn btn-refresh" onclick="syncFromSecrets()">همگام‌سازی</button>
+        <button class="btn btn-refresh" id="reloadBtn" onclick="reloadFromSecrets()">تازه‌سازی</button>
       </div>
     </div>
     <div class="panel">
-      <div class="status" id="flowStatus">وضعیت ورک‌فلو: —</div>
-      <p class="hint">ورک‌فلو فقط با VAULT_TOKEN اجرا می‌شود. توکن داشبورد و رادیو فقط برای کپی کردن هستند.</p>
+      <div class="status" id="flowStatus">وضعیت: آماده</div>
+      <p class="hint">ورود فقط فایل فعلی را باز می‌کند. اگر Secret را عوض کردی، تازه‌سازی را بزن.</p>
       <div id="list"></div>
     </div>
     <div class="foot">© 2026 · <span class="gold">H</span>ercule<span class="gold">P</span>anel</div>
@@ -189,8 +188,13 @@ function setLoginLoading(on) {
   btn.disabled = on;
   btn.innerHTML = on ? 'ورود<span class="spin"></span>' : "ورود";
 }
+function setReloadLoading(on) {
+  const btn = document.getElementById("reloadBtn");
+  btn.disabled = on;
+  btn.innerHTML = on ? 'تازه‌سازی<span class="spin"></span>' : "تازه‌سازی";
+}
 function setStatus(text) {
-  document.getElementById("flowStatus").textContent = "وضعیت ورک‌فلو: " + text;
+  document.getElementById("flowStatus").textContent = "وضعیت: " + text;
 }
 function b64ToBytes(b64) {
   const bin = atob(b64);
@@ -235,7 +239,7 @@ function renderList() {
   const box = document.getElementById("list");
   const items = vaultItems.filter(x => x && x.token);
   if (!items.length) {
-    box.innerHTML = '<div class="empty">توکنی نیست. صبر کن تا ورک‌فلو تمام شود.</div>';
+    box.innerHTML = '<div class="empty">توکنی نیست. تازه‌سازی را بزن.</div>';
     return;
   }
   box.innerHTML = items.map((item, i) => {
@@ -272,11 +276,7 @@ async function startWorkflow(token) {
     }
   );
   if (res.status === 204 || res.ok) return true;
-  throw new Error("شروع ورک‌فلو ناموفق (" + res.status + "). VAULT_TOKEN باید Actions write روی ریپوی vault داشته باشد");
-}
-async function cancelRun(token, runId) {
-  const res = await api("/repos/" + CONFIG.owner + "/" + CONFIG.repo + "/actions/runs/" + encodeURIComponent(runId) + "/cancel", token, { method: "POST" });
-  if (!res.ok && res.status !== 409) throw new Error("توقف ناموفق (" + res.status + ")");
+  throw new Error("شروع ورک‌فلو ناموفق (" + res.status + ")");
 }
 function stopPolling() {
   if (pollTimer) clearInterval(pollTimer);
@@ -284,7 +284,7 @@ function stopPolling() {
 }
 async function waitForRun(token) {
   stopPolling();
-  setStatus("در حال شروع...");
+  setStatus("در حال ساخت فایل...");
   const started = Date.now();
   return new Promise((resolve, reject) => {
     pollTimer = setInterval(async () => {
@@ -297,8 +297,7 @@ async function waitForRun(token) {
         const run = await latestRun(token);
         if (!run) return;
         activeRunId = run.id;
-        const label = (run.status || "—") + (run.conclusion ? " / " + run.conclusion : "");
-        setStatus("#" + run.id + " · " + label);
+        setStatus("#" + run.id + " · " + (run.status || "—") + (run.conclusion ? " / " + run.conclusion : ""));
         if (run.status === "completed") {
           stopPolling();
           resolve(run);
@@ -310,47 +309,32 @@ async function waitForRun(token) {
     }, 2500);
   });
 }
-async function syncFromSecrets() {
+async function reloadFromSecrets() {
   if (!dispatchToken) {
     setStatus("VAULT_TOKEN در فایل نیست");
     return toast("Secret به نام VAULT_TOKEN بساز و ورک‌فلو را یک‌بار دستی Run کن", "error");
   }
+  setReloadLoading(true);
   try {
-    setStatus("ارسال درخواست شروع...");
-    toast("ورک‌فلو شروع شد", "info");
+    setStatus("تازه‌سازی شروع شد");
+    toast("در حال به‌روز کردن از Secrets", "info");
     await startWorkflow(dispatchToken);
     await new Promise(r => setTimeout(r, 2500));
     const run = await waitForRun(dispatchToken);
     activeRunId = null;
     if (run && run.conclusion && run.conclusion !== "success") {
-      setStatus("تمام شد با وضعیت " + run.conclusion);
+      setStatus("ناموفق: " + run.conclusion);
       return toast("ورک‌فلو موفق نبود: " + run.conclusion, "error");
     }
-    setStatus("تمام شد. در حال خواندن فایل جدید...");
     await new Promise(r => setTimeout(r, 2000));
     await tryLocalDecrypt();
-    setStatus("همگام و متوقف شد");
-    toast("فایل گاوصندوق به‌روز شد", "success");
+    setStatus("به‌روز شد");
+    toast("توکن‌ها تازه شدند", "success");
   } catch (e) {
     setStatus(e.message || "خطا");
-    toast(e.message || "همگام‌سازی ناموفق", "error");
-  }
-}
-async function stopWorkflow() {
-  if (!dispatchToken) return toast("VAULT_TOKEN نیست", "error");
-  try {
-    let runId = activeRunId;
-    if (!runId) {
-      const run = await latestRun(dispatchToken);
-      if (run && (run.status === "queued" || run.status === "in_progress")) runId = run.id;
-    }
-    if (!runId) return toast("ورک‌فلوی در حال اجرا نیست", "info");
-    await cancelRun(dispatchToken, runId);
-    stopPolling();
-    setStatus("درخواست توقف ارسال شد");
-    toast("ورک‌فلو متوقف شد", "success");
-  } catch (e) {
-    toast(e.message || "توقف ناموفق", "error");
+    toast(e.message || "تازه‌سازی ناموفق", "error");
+  } finally {
+    setReloadLoading(false);
   }
 }
 async function unlockVault() {
@@ -367,8 +351,8 @@ async function unlockVault() {
     }
     document.getElementById("loginModal").classList.add("hidden");
     document.getElementById("app").classList.add("visible");
+    setStatus("آماده");
     toast("گاوصندوق باز شد", "success");
-    syncFromSecrets();
   } catch (e) {
     document.getElementById("app").classList.remove("visible");
     document.getElementById("loginModal").classList.remove("hidden");
@@ -398,7 +382,7 @@ function logout() {
   activeRunId = null;
   document.getElementById("list").innerHTML = "";
   document.getElementById("passInput").value = "";
-  setStatus("—");
+  setStatus("آماده");
   document.getElementById("app").classList.remove("visible");
   document.getElementById("loginModal").classList.remove("hidden");
   toast("خارج شدی", "info");
