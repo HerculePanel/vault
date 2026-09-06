@@ -85,6 +85,10 @@
     .hero { display: flex; justify-content: space-between; gap: 16px; align-items: center; flex-wrap: wrap; margin-bottom: 18px; }
     .brand { font-size: clamp(28px, 5vw, 44px); }
     .hero-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .badge {
+      display: inline-block; margin-top: 8px; padding: 5px 10px; border-radius: 999px;
+      background: rgba(62,227,154,.16); color: var(--mint); font-size: 14px;
+    }
     .panel { padding: 16px; border-radius: 22px; border: 1px solid var(--line); background: rgba(255,255,255,.03); }
     .hint { color: var(--muted); font-size: 14px; margin: 0 0 12px; text-align: right; }
     .status {
@@ -135,6 +139,7 @@
       <div>
         <div class="brand"><span class="gold">HP</span>anel <span class="gold">V</span>ault</div>
         <p class="sub" style="margin:6px 0 0">توکن‌های داشبورد و رادیو</p>
+        <div class="badge">تأیید شده</div>
       </div>
       <div class="hero-actions">
         <button class="btn btn-rose" onclick="logout()">خروج</button>
@@ -143,8 +148,8 @@
       </div>
     </div>
     <div class="panel">
-      <div class="status" id="flowStatus">وضعیت: آماده</div>
-      <p class="hint">ورود فقط فایل فعلی را باز می‌کند. اگر Secret را عوض کردی، تازه‌سازی را بزن.</p>
+      <div class="status" id="flowStatus">وضعیت: تأیید شده</div>
+      <p class="hint">توکن‌ها روی همین دامنه ذخیره شدند. داشبورد و رادیو بدون وارد کردن دوباره توکن باز می‌شوند.</p>
       <div id="list"></div>
     </div>
     <div class="foot">© 2026 · <span class="gold">H</span>ercule<span class="gold">P</span>anel</div>
@@ -159,6 +164,11 @@ const CONFIG = {
   branch: "main",
   vaultFile: "vault.enc.json",
   api: "https://api.github.com"
+};
+const KEYS = {
+  verified: "hpanel_verified",
+  dash: "hpanel_dashboard_token",
+  radio: "hpanel_radio_token"
 };
 
 let vaultPassword = "";
@@ -182,6 +192,34 @@ function maskToken(token) {
   const t = String(token || "");
   if (t.length <= 10) return "••••••••";
   return t.slice(0, 7) + "••••••••" + t.slice(-4);
+}
+function setCookie(name, value) {
+  document.cookie = name + "=" + encodeURIComponent(value || "") + "; path=/; max-age=" + (30*24*60*60) + "; SameSite=Lax";
+}
+function clearCookie(name) {
+  document.cookie = name + "=; path=/; max-age=0; SameSite=Lax";
+}
+function tokenByName(part) {
+  const item = vaultItems.find(x => (x.name || "").toLowerCase().indexOf(part) >= 0);
+  return (item && item.token) || "";
+}
+function saveSession() {
+  const dash = tokenByName("dashboard");
+  const radio = tokenByName("radio");
+  localStorage.setItem(KEYS.verified, "1");
+  localStorage.setItem(KEYS.dash, dash);
+  localStorage.setItem(KEYS.radio, radio);
+  setCookie(KEYS.verified, "1");
+  setCookie(KEYS.dash, dash);
+  setCookie(KEYS.radio, radio);
+}
+function clearSession() {
+  localStorage.removeItem(KEYS.verified);
+  localStorage.removeItem(KEYS.dash);
+  localStorage.removeItem(KEYS.radio);
+  clearCookie(KEYS.verified);
+  clearCookie(KEYS.dash);
+  clearCookie(KEYS.radio);
 }
 function setLoginLoading(on) {
   const btn = document.getElementById("loginBtn");
@@ -233,6 +271,7 @@ function applyDecrypted(data) {
   vaultItems = Array.isArray(data.items) ? data.items : [];
   dispatchToken = data.dispatch || "";
   shown = {};
+  saveSession();
   renderList();
 }
 function renderList() {
@@ -328,8 +367,8 @@ async function reloadFromSecrets() {
     }
     await new Promise(r => setTimeout(r, 2000));
     await tryLocalDecrypt();
-    setStatus("به‌روز شد");
-    toast("توکن‌ها تازه شدند", "success");
+    setStatus("تأیید شده");
+    toast("توکن‌ها ذخیره شدند", "success");
   } catch (e) {
     setStatus(e.message || "خطا");
     toast(e.message || "تازه‌سازی ناموفق", "error");
@@ -351,9 +390,10 @@ async function unlockVault() {
     }
     document.getElementById("loginModal").classList.add("hidden");
     document.getElementById("app").classList.add("visible");
-    setStatus("آماده");
-    toast("گاوصندوق باز شد", "success");
+    setStatus("تأیید شده");
+    toast("تأیید شدی. توکن‌ها ذخیره شدند", "success");
   } catch (e) {
+    clearSession();
     document.getElementById("app").classList.remove("visible");
     document.getElementById("loginModal").classList.remove("hidden");
     toast(e.message || "ورود ناموفق", "error");
@@ -380,6 +420,7 @@ function logout() {
   dispatchToken = "";
   vaultPassword = "";
   activeRunId = null;
+  clearSession();
   document.getElementById("list").innerHTML = "";
   document.getElementById("passInput").value = "";
   setStatus("آماده");
@@ -392,4 +433,4 @@ document.getElementById("passInput").addEventListener("keydown", e => {
 });
 </script>
 </body>
-</html>
+  </html>
