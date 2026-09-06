@@ -14,7 +14,6 @@
       --muted: #c3b09a;
       --line: rgba(255, 186, 92, .22);
       --gold: #ffb43a;
-      --gold2: #ffe08a;
       --mint: #3ee39a;
       --ink: #140f0a;
       --shadow: 0 28px 70px rgba(0,0,0,.55);
@@ -35,7 +34,6 @@
       position: fixed; inset: 0; z-index: 1000;
       display: flex; align-items: center; justify-content: center;
       background: rgba(8,6,4,.78); backdrop-filter: blur(16px);
-      opacity: 1; visibility: visible;
       transition: opacity .35s ease, visibility .35s ease;
     }
     .login-modal.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
@@ -45,11 +43,8 @@
       border: 1px solid var(--line);
       background: linear-gradient(165deg, rgba(255,180,58,.12), rgba(255,255,255,.03));
       box-shadow: var(--shadow); text-align: center;
-      transform: translateY(0);
-      transition: transform .35s ease, opacity .35s ease;
     }
-    .login-modal.hidden .card-box { transform: translateY(12px); opacity: 0; }
-    h1, h2 { margin: 0 0 8px; }
+    h1 { margin: 0 0 8px; }
     .sub { margin: 0 0 16px; color: var(--muted); font-size: 16px; }
     .field { text-align: right; margin-bottom: 10px; }
     .field label { display: block; margin-bottom: 6px; color: var(--gold); font-size: 15px; }
@@ -58,7 +53,6 @@
       border: 1px solid var(--line); background: rgba(0,0,0,.38);
       color: var(--text); outline: none; font-family: inherit; font-size: 16px;
     }
-    input:focus { border-color: rgba(255,180,58,.55); }
     .ltr { direction: ltr; text-align: left; unicode-bidi: isolate; }
     .btn {
       border: 0; cursor: pointer; border-radius: 16px; padding: 12px 14px;
@@ -74,16 +68,15 @@
     .btn-home { background: linear-gradient(180deg, #8ab0ff, #4d7dff); color: #061018; text-decoration:none; }
     .btn-refresh {
       background: linear-gradient(180deg, #7dfff0, #19c4b8);
-      color: #04221f;
-      border: 1px solid rgba(125,255,240,.45);
+      color: #04221f; border: 1px solid rgba(125,255,240,.45);
     }
     .btn-ghost { background: rgba(255,255,255,.06); color: var(--text); border: 1px solid var(--line); box-shadow: none; }
     .spin {
       width: 16px; height: 16px; border-radius: 50%;
       border: 2px solid rgba(20,15,10,.25); border-top-color: var(--ink);
-      display: inline-block; flex: 0 0 16px;
-      animation: spin .7s linear infinite;
+      display: inline-block; animation: spin .7s linear infinite;
     }
+    .spin.light { border-color: rgba(255,255,255,.25); border-top-color: #fff6ea; }
     @keyframes spin { to { transform: rotate(360deg); } }
     .app {
       width: min(900px, calc(100% - 30px));
@@ -94,17 +87,16 @@
     .hero { display: flex; justify-content: space-between; gap: 16px; align-items: center; flex-wrap: wrap; margin-bottom: 18px; }
     .brand { font-size: clamp(28px, 5vw, 44px); }
     .hero-actions { display: flex; gap: 8px; flex-wrap: wrap; }
-    .panel {
-      padding: 16px; border-radius: 22px; border: 1px solid var(--line);
-      background: rgba(255,255,255,.03);
-    }
+    .panel { padding: 16px; border-radius: 22px; border: 1px solid var(--line); background: rgba(255,255,255,.03); }
     .hint { color: var(--muted); font-size: 14px; margin: 0 0 12px; text-align: right; }
+    .status {
+      margin-bottom: 12px; padding: 10px 12px; border-radius: 12px;
+      border: 1px solid var(--line); background: rgba(0,0,0,.22); color: var(--muted);
+    }
     .item {
       padding: 14px 16px; border-radius: 16px; margin-bottom: 10px;
       border: 1px solid var(--line); background: rgba(255,255,255,.04);
-      transition: background .25s ease, transform .25s ease;
     }
-    .item:hover { background: rgba(255,255,255,.08); transform: translateY(-2px); }
     .item-title { font-size: 20px; }
     .token-box {
       margin-top: 8px; padding: 10px 12px; border-radius: 12px;
@@ -133,8 +125,8 @@
       <h1><span class="gold">HP</span>anel <span class="gold">V</span>ault</h1>
       <p class="sub">رمز گاوصندوق را وارد کن</p>
       <div class="field">
-        <label for="passInput">رمز گاوصندوق</label>
-        <input id="passInput" type="password" placeholder="رمز گاوصندوق">
+        <label for="passInput">رمز</label>
+        <input id="passInput" type="password" placeholder="همان VAULT_PASSWORD">
       </div>
       <button id="loginBtn" class="btn btn-gold" style="width:100%;margin-top:8px" onclick="unlockVault()">ورود</button>
     </div>
@@ -147,13 +139,15 @@
         <p class="sub" style="margin:6px 0 0">توکن‌های داشبورد و رادیو</p>
       </div>
       <div class="hero-actions">
+        <button class="btn btn-rose" id="stopBtn" onclick="stopWorkflow()">توقف ورک‌فلو</button>
         <button class="btn btn-rose" onclick="logout()">خروج</button>
         <a class="btn btn-home" href="https://herculepanel.github.io/">برگشت به صفحه نخست</a>
-        <button class="btn btn-refresh" onclick="reloadVault()">تازه‌سازی</button>
+        <button class="btn btn-refresh" onclick="syncFromSecrets()">همگام‌سازی</button>
       </div>
     </div>
     <div class="panel">
-      <p class="hint">توکن‌ها فقط بعد از وارد کردن رمز نمایش داده می‌شوند. رمز در تنظیمات ریپو مخفی است.</p>
+      <div class="status" id="flowStatus">وضعیت ورک‌فلو: —</div>
+      <p class="hint">بعد از ورود، ورک‌فلو خودش شروع می‌شود، فایل رمزشده را می‌سازد، بعد خودش تمام می‌شود.</p>
       <div id="list"></div>
     </div>
     <div class="foot">© 2026 · <span class="gold">H</span>ercule<span class="gold">P</span>anel</div>
@@ -164,12 +158,18 @@
 const CONFIG = {
   owner: "HerculePanel",
   repo: "vault",
-  api: "https://api.github.com",
-  home: "https://herculepanel.github.io/"
+  workflow: "build-vault.yml",
+  branch: "main",
+  vaultFile: "vault.enc.json",
+  api: "https://api.github.com"
 };
 
+let vaultPassword = "";
 let vaultItems = [];
 let shown = {};
+let dispatchToken = "";
+let activeRunId = null;
+let pollTimer = null;
 
 function toast(msg, type) {
   const el = document.createElement("div");
@@ -179,57 +179,70 @@ function toast(msg, type) {
   setTimeout(() => { el.classList.add("out"); setTimeout(() => el.remove(), 280); }, 3200);
 }
 function esc(s) {
-  return String(s ?? "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;");
+  return String(s ?? "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
 }
 function maskToken(token) {
   const t = String(token || "");
   if (t.length <= 10) return "••••••••";
   return t.slice(0, 7) + "••••••••" + t.slice(-4);
 }
-function setLoading(on) {
+function setLoginLoading(on) {
   const btn = document.getElementById("loginBtn");
   btn.disabled = on;
   btn.innerHTML = on ? 'ورود<span class="spin"></span>' : "ورود";
 }
-function showApp() {
-  document.getElementById("loginModal").classList.add("hidden");
-  document.getElementById("app").classList.add("visible");
+function setStatus(text) {
+  document.getElementById("flowStatus").textContent = "وضعیت ورک‌فلو: " + text;
 }
-function hideApp() {
-  document.getElementById("app").classList.remove("visible");
-  document.getElementById("loginModal").classList.remove("hidden");
+function b64ToBytes(b64) {
+  const bin = atob(b64);
+  const out = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+  return out;
 }
-async function api(path, options) {
+async function deriveKey(password, saltBytes) {
+  const material = await crypto.subtle.importKey("raw", new TextEncoder().encode(password), "PBKDF2", false, ["deriveBits"]);
+  const bits = await crypto.subtle.deriveBits({ name: "PBKDF2", salt: saltBytes, iterations: 100000, hash: "SHA-256" }, material, 256);
+  return new Uint8Array(bits);
+}
+async function decryptPack(password, pack) {
+  const salt = b64ToBytes(pack.salt);
+  const blob = b64ToBytes(pack.blob);
+  const key = await deriveKey(password, salt);
+  const raw = new Uint8Array(blob.length);
+  for (let i = 0; i < blob.length; i++) raw[i] = blob[i] ^ key[i % 32];
+  return JSON.parse(new TextDecoder().decode(raw));
+}
+async function loadEncryptedFile() {
+  const res = await fetch(CONFIG.vaultFile + "?t=" + Date.now(), { cache: "no-store" });
+  if (!res.ok) throw new Error("missing");
+  return res.json();
+}
+function dashboardToken() {
+  const item = vaultItems.find(x => /dashboard/i.test(x.name || ""));
+  return (item && item.token) || (vaultItems[0] && vaultItems[0].token) || "";
+}
+async function api(path, token, options) {
   options = options || {};
   const headers = Object.assign({
     "Accept": "application/vnd.github+json",
     "X-GitHub-Api-Version": "2022-11-28"
   }, options.headers || {});
+  if (token) headers.Authorization = "Bearer " + token;
   return fetch(CONFIG.api + path, Object.assign({}, options, { headers }));
-}
-async function getVault() {
-  try {
-    const res = await api("/repos/" + CONFIG.owner + "/" + CONFIG.repo + "/contents/vault.json");
-    if (!res.ok) throw new Error("گیست vault.json پیدا نشد");
-    const data = await res.json();
-    const content = atob(data.content);
-    return JSON.parse(content);
-  } catch (e) {
-    throw new Error("خواندن گاوصندوق ناموفق بود");
-  }
 }
 function renderList() {
   const box = document.getElementById("list");
-  if (!vaultItems.length) {
-    box.innerHTML = '<div class="empty">توکنی در گاوصندوق نیست.</div>';
+  const items = vaultItems.filter(x => x && x.token);
+  if (!items.length) {
+    box.innerHTML = '<div class="empty">توکنی نیست. صبر کن تا ورک‌فلو تمام شود.</div>';
     return;
   }
-  box.innerHTML = vaultItems.map((item, i) => {
-    const token = String(item.token || "");
+  box.innerHTML = items.map((item, i) => {
     const open = !!shown[i];
     return '<div class="item">' +
       '<div class="item-title">' + esc(item.name || "توکن") + '</div>' +
-      '<div class="token-box ltr">' + esc(open ? token : maskToken(token)) + '</div>' +
+      '<div class="token-box ltr">' + esc(open ? item.token : maskToken(item.token)) + '</div>' +
       '<div class="row">' +
         '<button class="btn btn-gold" onclick="copyToken(' + i + ')">کپی توکن</button>' +
         '<button class="btn btn-ghost" onclick="toggleToken(' + i + ')">' + (open ? "مخفی" : "نمایش") + '</button>' +
@@ -237,24 +250,142 @@ function renderList() {
     '</div>';
   }).join("");
 }
+async function applyDecrypted(data) {
+  vaultItems = Array.isArray(data.items) ? data.items : [];
+  dispatchToken = dashboardToken();
+  shown = {};
+  renderList();
+}
+async function tryLocalDecrypt() {
+  const pack = await loadEncryptedFile();
+  const data = await decryptPack(vaultPassword, pack);
+  await applyDecrypted(data);
+  return true;
+}
+async function latestRun(token) {
+  const res = await api("/repos/" + CONFIG.owner + "/" + CONFIG.repo + "/actions/workflows/" + encodeURIComponent(CONFIG.workflow) + "/runs?per_page=5", token);
+  if (!res.ok) throw new Error("خواندن ورک‌فلو ناموفق (" + res.status + ")");
+  const data = await res.json();
+  return (data.workflow_runs || [])[0] || null;
+}
+async function startWorkflow(token) {
+  const res = await api(
+    "/repos/" + CONFIG.owner + "/" + CONFIG.repo + "/actions/workflows/" + encodeURIComponent(CONFIG.workflow) + "/dispatches",
+    token,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ref: CONFIG.branch })
+    }
+  );
+  if (res.status === 204 || res.ok) return true;
+  throw new Error("شروع ورک‌فلو ناموفق (" + res.status + "). توکن داشبورد باید به ریپوی vault دسترسی Actions داشته باشد");
+}
+async function cancelRun(token, runId) {
+  const res = await api("/repos/" + CONFIG.owner + "/" + CONFIG.repo + "/actions/runs/" + encodeURIComponent(runId) + "/cancel", token, { method: "POST" });
+  if (!res.ok && res.status !== 409) throw new Error("توقف ناموفق (" + res.status + ")");
+}
+function stopPolling() {
+  if (pollTimer) clearInterval(pollTimer);
+  pollTimer = null;
+}
+async function waitForRun(token) {
+  stopPolling();
+  setStatus("در حال شروع...");
+  let seenId = null;
+  const started = Date.now();
+  return new Promise((resolve, reject) => {
+    pollTimer = setInterval(async () => {
+      try {
+        if (Date.now() - started > 180000) {
+          stopPolling();
+          reject(new Error("ورک‌فلو خیلی طول کشید"));
+          return;
+        }
+        const run = await latestRun(token);
+        if (!run) return;
+        if (!seenId) seenId = run.id;
+        activeRunId = run.id;
+        const label = (run.status || "—") + (run.conclusion ? " / " + run.conclusion : "");
+        setStatus("#" + run.id + " · " + label);
+        if (run.status === "completed") {
+          stopPolling();
+          resolve(run);
+        }
+      } catch (e) {
+        stopPolling();
+        reject(e);
+      }
+    }, 2500);
+  });
+}
+async function syncFromSecrets() {
+  const token = dispatchToken || dashboardToken();
+  if (!token) {
+    setStatus("توکن برای شروع ورک‌فلو نیست");
+    return toast("اول باید فایل رمزشده یک‌بار ساخته شود", "error");
+  }
+  try {
+    setStatus("ارسال درخواست شروع...");
+    toast("ورک‌فلو شروع شد", "info");
+    await startWorkflow(token);
+    await new Promise(r => setTimeout(r, 2500));
+    const run = await waitForRun(token);
+    activeRunId = null;
+    if (run && run.conclusion && run.conclusion !== "success") {
+      setStatus("تمام شد با وضعیت " + run.conclusion);
+      return toast("ورک‌فلو موفق نبود: " + run.conclusion, "error");
+    }
+    setStatus("تمام شد. در حال خواندن فایل جدید...");
+    await new Promise(r => setTimeout(r, 2000));
+    await tryLocalDecrypt();
+    setStatus("همگام و متوقف شد");
+    toast("فایل گاوصندوق به‌روز شد", "success");
+  } catch (e) {
+    setStatus(e.message || "خطا");
+    toast(e.message || "همگام‌سازی ناموفق", "error");
+  }
+}
+async function stopWorkflow() {
+  const token = dispatchToken || dashboardToken();
+  if (!token) return toast("توکن نیست", "error");
+  try {
+    let runId = activeRunId;
+    if (!runId) {
+      const run = await latestRun(token);
+      if (run && (run.status === "queued" || run.status === "in_progress")) runId = run.id;
+    }
+    if (!runId) return toast("ورک‌فلوی در حال اجرا نیست", "info");
+    await cancelRun(token, runId);
+    stopPolling();
+    setStatus("درخواست توقف ارسال شد");
+    toast("ورک‌فلو متوقف شد", "success");
+  } catch (e) {
+    toast(e.message || "توقف ناموفق", "error");
+  }
+}
 async function unlockVault() {
   const pass = (document.getElementById("passInput").value || "").trim();
   if (!pass) return toast("رمز را وارد کن", "error");
-  setLoading(true);
+  vaultPassword = pass;
+  setLoginLoading(true);
   try {
-    const data = await getVault();
-    const real = String(data.password || "").trim();
-    if (!real || pass !== real) throw new Error("رمز اشتباه است");
-    vaultItems = data.items || data.tokens || [];
-    shown = {};
-    showApp();
-    renderList();
+    try {
+      await tryLocalDecrypt();
+    } catch (e) {
+      if (e.message === "missing") throw new Error("اول یک‌بار از تب Actions ورک‌فلو Build vault file را Run کن");
+      throw new Error("رمز اشتباه است");
+    }
+    document.getElementById("loginModal").classList.add("hidden");
+    document.getElementById("app").classList.add("visible");
     toast("گاوصندوق باز شد", "success");
+    syncFromSecrets();
   } catch (e) {
-    hideApp();
+    document.getElementById("app").classList.remove("visible");
+    document.getElementById("loginModal").classList.remove("hidden");
     toast(e.message || "ورود ناموفق", "error");
   } finally {
-    setLoading(false);
+    setLoginLoading(false);
   }
 }
 function toggleToken(i) {
@@ -270,11 +401,17 @@ function copyToken(i) {
   );
 }
 function logout() {
+  stopPolling();
   vaultItems = [];
   shown = {};
+  dispatchToken = "";
+  vaultPassword = "";
+  activeRunId = null;
   document.getElementById("list").innerHTML = "";
   document.getElementById("passInput").value = "";
-  hideApp();
+  setStatus("—");
+  document.getElementById("app").classList.remove("visible");
+  document.getElementById("loginModal").classList.remove("hidden");
   toast("خارج شدی", "info");
 }
 document.getElementById("passInput").addEventListener("keydown", e => {
