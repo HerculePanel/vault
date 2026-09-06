@@ -23,6 +23,7 @@ jobs:
           VAULT_PASSWORD: ${{ secrets.VAULT_PASSWORD }}
           DASHBOARD_TOKEN: ${{ secrets.DASHBOARD_TOKEN }}
           RADIO_TOKEN: ${{ secrets.RADIO_TOKEN }}
+          VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
         run: |
           set -e
           python3 - <<'PY'
@@ -30,11 +31,11 @@ jobs:
           password = os.environ.get("VAULT_PASSWORD") or ""
           dash = os.environ.get("DASHBOARD_TOKEN") or ""
           radio = os.environ.get("RADIO_TOKEN") or ""
+          vault = os.environ.get("VAULT_TOKEN") or ""
           if not password:
               raise SystemExit("VAULT_PASSWORD secret is empty")
-          if not dash and not radio:
-              raise SystemExit("DASHBOARD_TOKEN and RADIO_TOKEN are empty")
           payload = json.dumps({
+              "dispatch": vault,
               "items": [
                   {"name": "HPanel Dashboard v1.2", "token": dash},
                   {"name": "HPanel Radio", "token": radio}
