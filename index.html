@@ -63,7 +63,6 @@
     .btn:active:not(:disabled) { transform: translateY(3px); box-shadow: 0 3px 0 rgba(0,0,0,.35); }
     .btn:disabled { opacity: .4; cursor: not-allowed; }
     .btn-gold { background: linear-gradient(180deg, #ffd27a, #ff9d1f); color: var(--ink); }
-    .btn-mint { background: linear-gradient(180deg, #6af3b8, #17c77a); color: #042016; }
     .btn-rose { background: linear-gradient(180deg, #ff8a97, #e23b4d); color: #fff; }
     .btn-home { background: linear-gradient(180deg, #8ab0ff, #4d7dff); color: #061018; text-decoration:none; }
     .btn-refresh {
@@ -76,7 +75,6 @@
       border: 2px solid rgba(20,15,10,.25); border-top-color: var(--ink);
       display: inline-block; animation: spin .7s linear infinite;
     }
-    .spin.light { border-color: rgba(255,255,255,.25); border-top-color: #fff6ea; }
     @keyframes spin { to { transform: rotate(360deg); } }
     .app {
       width: min(900px, calc(100% - 30px));
@@ -139,7 +137,7 @@
         <p class="sub" style="margin:6px 0 0">توکن‌های داشبورد و رادیو</p>
       </div>
       <div class="hero-actions">
-        <button class="btn btn-rose" id="stopBtn" onclick="stopWorkflow()">توقف ورک‌فلو</button>
+        <button class="btn btn-rose" onclick="stopWorkflow()">توقف ورک‌فلو</button>
         <button class="btn btn-rose" onclick="logout()">خروج</button>
         <a class="btn btn-home" href="https://herculepanel.github.io/">برگشت به صفحه نخست</a>
         <button class="btn btn-refresh" onclick="syncFromSecrets()">همگام‌سازی</button>
@@ -147,7 +145,7 @@
     </div>
     <div class="panel">
       <div class="status" id="flowStatus">وضعیت ورک‌فلو: —</div>
-      <p class="hint">بعد از ورود، ورک‌فلو خودش شروع می‌شود، فایل رمزشده را می‌سازد، بعد خودش تمام می‌شود.</p>
+      <p class="hint">ورک‌فلو فقط با VAULT_TOKEN اجرا می‌شود. توکن داشبورد و رادیو فقط برای کپی کردن هستند.</p>
       <div id="list"></div>
     </div>
     <div class="foot">© 2026 · <span class="gold">H</span>ercule<span class="gold">P</span>anel</div>
@@ -218,10 +216,6 @@ async function loadEncryptedFile() {
   if (!res.ok) throw new Error("missing");
   return res.json();
 }
-function dashboardToken() {
-  const item = vaultItems.find(x => /dashboard/i.test(x.name || ""));
-  return (item && item.token) || (vaultItems[0] && vaultItems[0].token) || "";
-}
 async function api(path, token, options) {
   options = options || {};
   const headers = Object.assign({
@@ -230,6 +224,12 @@ async function api(path, token, options) {
   }, options.headers || {});
   if (token) headers.Authorization = "Bearer " + token;
   return fetch(CONFIG.api + path, Object.assign({}, options, { headers }));
+}
+function applyDecrypted(data) {
+  vaultItems = Array.isArray(data.items) ? data.items : [];
+  dispatchToken = data.dispatch || "";
+  shown = {};
+  renderList();
 }
 function renderList() {
   const box = document.getElementById("list");
@@ -250,17 +250,10 @@ function renderList() {
     '</div>';
   }).join("");
 }
-async function applyDecrypted(data) {
-  vaultItems = Array.isArray(data.items) ? data.items : [];
-  dispatchToken = dashboardToken();
-  shown = {};
-  renderList();
-}
 async function tryLocalDecrypt() {
   const pack = await loadEncryptedFile();
   const data = await decryptPack(vaultPassword, pack);
-  await applyDecrypted(data);
-  return true;
+  applyDecrypted(data);
 }
 async function latestRun(token) {
   const res = await api("/repos/" + CONFIG.owner + "/" + CONFIG.repo + "/actions/workflows/" + encodeURIComponent(CONFIG.workflow) + "/runs?per_page=5", token);
@@ -279,7 +272,7 @@ async function startWorkflow(token) {
     }
   );
   if (res.status === 204 || res.ok) return true;
-  throw new Error("شروع ورک‌فلو ناموفق (" + res.status + "). توکن داشبورد باید به ریپوی vault دسترسی Actions داشته باشد");
+  throw new Error("شروع ورک‌فلو ناموفق (" + res.status + "). VAULT_TOKEN باید Actions write روی ریپوی vault داشته باشد");
 }
 async function cancelRun(token, runId) {
   const res = await api("/repos/" + CONFIG.owner + "/" + CONFIG.repo + "/actions/runs/" + encodeURIComponent(runId) + "/cancel", token, { method: "POST" });
@@ -292,7 +285,6 @@ function stopPolling() {
 async function waitForRun(token) {
   stopPolling();
   setStatus("در حال شروع...");
-  let seenId = null;
   const started = Date.now();
   return new Promise((resolve, reject) => {
     pollTimer = setInterval(async () => {
@@ -304,7 +296,6 @@ async function waitForRun(token) {
         }
         const run = await latestRun(token);
         if (!run) return;
-        if (!seenId) seenId = run.id;
         activeRunId = run.id;
         const label = (run.status || "—") + (run.conclusion ? " / " + run.conclusion : "");
         setStatus("#" + run.id + " · " + label);
@@ -320,17 +311,16 @@ async function waitForRun(token) {
   });
 }
 async function syncFromSecrets() {
-  const token = dispatchToken || dashboardToken();
-  if (!token) {
-    setStatus("توکن برای شروع ورک‌فلو نیست");
-    return toast("اول باید فایل رمزشده یک‌بار ساخته شود", "error");
+  if (!dispatchToken) {
+    setStatus("VAULT_TOKEN در فایل نیست");
+    return toast("Secret به نام VAULT_TOKEN بساز و ورک‌فلو را یک‌بار دستی Run کن", "error");
   }
   try {
     setStatus("ارسال درخواست شروع...");
     toast("ورک‌فلو شروع شد", "info");
-    await startWorkflow(token);
+    await startWorkflow(dispatchToken);
     await new Promise(r => setTimeout(r, 2500));
-    const run = await waitForRun(token);
+    const run = await waitForRun(dispatchToken);
     activeRunId = null;
     if (run && run.conclusion && run.conclusion !== "success") {
       setStatus("تمام شد با وضعیت " + run.conclusion);
@@ -347,16 +337,15 @@ async function syncFromSecrets() {
   }
 }
 async function stopWorkflow() {
-  const token = dispatchToken || dashboardToken();
-  if (!token) return toast("توکن نیست", "error");
+  if (!dispatchToken) return toast("VAULT_TOKEN نیست", "error");
   try {
     let runId = activeRunId;
     if (!runId) {
-      const run = await latestRun(token);
+      const run = await latestRun(dispatchToken);
       if (run && (run.status === "queued" || run.status === "in_progress")) runId = run.id;
     }
     if (!runId) return toast("ورک‌فلوی در حال اجرا نیست", "info");
-    await cancelRun(token, runId);
+    await cancelRun(dispatchToken, runId);
     stopPolling();
     setStatus("درخواست توقف ارسال شد");
     toast("ورک‌فلو متوقف شد", "success");
