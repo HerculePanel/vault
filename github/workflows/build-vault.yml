@@ -3,12 +3,18 @@ name: Build vault file
 on:
   workflow_dispatch:
 
+concurrency:
+  group: build-vault
+  cancel-in-progress: true
+
 permissions:
   contents: write
+  actions: read
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
 
