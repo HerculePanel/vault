@@ -164,16 +164,12 @@
 const CONFIG = {
   owner: "HerculePanel",
   repo: "HPanel-Tokens",
-  branch: "main",
-  gistId: "",
-  gistFile: "",
   api: "https://api.github.com",
   home: "https://herculepanel.github.io/"
 };
 
 let vaultItems = [];
 let shown = {};
-let vaultPassword = "";
 
 function toast(msg, type) {
   const el = document.createElement("div");
@@ -213,7 +209,7 @@ async function api(path, options) {
 }
 async function getVault() {
   try {
-    const res = await api("/repos/" + CONFIG.owner + "/" + CONFIG.repo + "/contents/" + CONFIG.gistFile);
+    const res = await api("/repos/" + CONFIG.owner + "/" + CONFIG.repo + "/contents/vault.json");
     if (!res.ok) throw new Error("گیست vault.json پیدا نشد");
     const data = await res.json();
     const content = atob(data.content);
@@ -250,7 +246,6 @@ async function unlockVault() {
     const real = String(data.password || "").trim();
     if (!real || pass !== real) throw new Error("رمز اشتباه است");
     vaultItems = data.items || data.tokens || [];
-    vaultPassword = pass;
     shown = {};
     showApp();
     renderList();
