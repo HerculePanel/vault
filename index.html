@@ -57,7 +57,6 @@
       width: 100%; padding: 13px 14px; border-radius: 14px;
       border: 1px solid var(--line); background: rgba(0,0,0,.38);
       color: var(--text); outline: none; font-family: inherit; font-size: 16px;
-      transition: border-color .25s ease, background .25s ease;
     }
     input:focus { border-color: rgba(255,180,58,.55); }
     .ltr { direction: ltr; text-align: left; unicode-bidi: isolate; }
@@ -66,7 +65,6 @@
       font-family: inherit; font-size: 17px;
       box-shadow: 0 6px 0 rgba(0,0,0,.35);
       display: inline-flex; align-items: center; justify-content: center; gap: 10px;
-      transition: transform .18s ease, box-shadow .18s ease, opacity .18s ease;
     }
     .btn:active:not(:disabled) { transform: translateY(3px); box-shadow: 0 3px 0 rgba(0,0,0,.35); }
     .btn:disabled { opacity: .4; cursor: not-allowed; }
@@ -135,7 +133,7 @@
       <h1><span class="gold">HP</span>anel <span class="gold">V</span>ault</h1>
       <p class="sub">رمز گاوصندوق را وارد کن</p>
       <div class="field">
-        <label for="passInput">رمز</label>
+        <label for="passInput">رمز گاوصندوق</label>
         <input id="passInput" type="password" placeholder="رمز گاوصندوق">
       </div>
       <button id="loginBtn" class="btn btn-gold" style="width:100%;margin-top:8px" onclick="unlockVault()">ورود</button>
@@ -155,7 +153,7 @@
       </div>
     </div>
     <div class="panel">
-      <p class="hint">بعد از ورود می‌توانی توکن را کپی کنی و در داشبورد یا رادیو استفاده کنی. رمز در گیست تنظیم می‌شود.</p>
+      <p class="hint">توکن‌ها فقط بعد از وارد کردن رمز نمایش داده می‌شوند. رمز در تنظیمات ریپو مخفی است.</p>
       <div id="list"></div>
     </div>
     <div class="foot">© 2026 · <span class="gold">H</span>ercule<span class="gold">P</span>anel</div>
@@ -164,14 +162,18 @@
 
 <script>
 const CONFIG = {
-  gistUser: "HerculePanel",
-  gistId: "527872f2eda657540680f9ea15e919cb",
-  gistFile: "vault.json",
+  owner: "HerculePanel",
+  repo: "HPanel-Tokens",
+  branch: "main",
+  gistId: "",
+  gistFile: "",
+  api: "https://api.github.com",
   home: "https://herculepanel.github.io/"
 };
 
 let vaultItems = [];
 let shown = {};
+let vaultPassword = "";
 
 function toast(msg, type) {
   const el = document.createElement("div");
@@ -201,28 +203,29 @@ function hideApp() {
   document.getElementById("app").classList.remove("visible");
   document.getElementById("loginModal").classList.remove("hidden");
 }
-async function loadVaultJson() {
-  if (!CONFIG.gistId || CONFIG.gistId.indexOf("PUT_") === 0) {
-    throw new Error("اول CONFIG.gistId را در html بگذار");
+async function api(path, options) {
+  options = options || {};
+  const headers = Object.assign({
+    "Accept": "application/vnd.github+json",
+    "X-GitHub-Api-Version": "2022-11-28"
+  }, options.headers || {});
+  return fetch(CONFIG.api + path, Object.assign({}, options, { headers }));
+}
+async function getVault() {
+  try {
+    const res = await api("/repos/" + CONFIG.owner + "/" + CONFIG.repo + "/contents/" + CONFIG.gistFile);
+    if (!res.ok) throw new Error("گیست vault.json پیدا نشد");
+    const data = await res.json();
+    const content = atob(data.content);
+    return JSON.parse(content);
+  } catch (e) {
+    throw new Error("خواندن گاوصندوق ناموفق بود");
   }
-  const urls = [
-    "https://gist.githubusercontent.com/" + CONFIG.gistUser + "/" + CONFIG.gistId + "/raw/" + CONFIG.gistFile,
-    "https://gist.githubusercontent.com/" + CONFIG.gistUser + "/" + CONFIG.gistId + "/raw/"
-  ];
-  let lastErr = null;
-  for (const url of urls) {
-    try {
-      const res = await fetch(url + "?t=" + Date.now(), { cache: "no-store" });
-      if (!res.ok) { lastErr = new Error("خواندن گیست ناموفق (" + res.status + ")"); continue; }
-      return JSON.parse(await res.text());
-    } catch (e) { lastErr = e; }
-  }
-  throw lastErr || new Error("خواندن گیست ناموفق");
 }
 function renderList() {
   const box = document.getElementById("list");
   if (!vaultItems.length) {
-    box.innerHTML = '<div class="empty">توکنی در گیست نیست.</div>';
+    box.innerHTML = '<div class="empty">توکنی در گاوصندوق نیست.</div>';
     return;
   }
   box.innerHTML = vaultItems.map((item, i) => {
@@ -243,33 +246,20 @@ async function unlockVault() {
   if (!pass) return toast("رمز را وارد کن", "error");
   setLoading(true);
   try {
-    const data = await loadVaultJson();
-    const real = String(data.password || data.pass || "").trim();
+    const data = await getVault();
+    const real = String(data.password || "").trim();
     if (!real || pass !== real) throw new Error("رمز اشتباه است");
-    vaultItems = Array.isArray(data.items) ? data.items : (Array.isArray(data.tokens) ? data.tokens : []);
+    vaultItems = data.items || data.tokens || [];
+    vaultPassword = pass;
     shown = {};
     showApp();
     renderList();
     toast("گاوصندوق باز شد", "success");
   } catch (e) {
-    vaultItems = [];
     hideApp();
     toast(e.message || "ورود ناموفق", "error");
   } finally {
     setLoading(false);
-  }
-}
-async function reloadVault() {
-  const pass = (document.getElementById("passInput").value || "").trim();
-  if (!pass) return toast("اول وارد شو", "error");
-  try {
-    const data = await loadVaultJson();
-    if (pass !== String(data.password || data.pass || "").trim()) throw new Error("رمز اشتباه است");
-    vaultItems = Array.isArray(data.items) ? data.items : (Array.isArray(data.tokens) ? data.tokens : []);
-    renderList();
-    toast("تازه‌سازی شد", "success");
-  } catch (e) {
-    toast(e.message || "تازه‌سازی ناموفق", "error");
   }
 }
 function toggleToken(i) {
