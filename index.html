@@ -7,20 +7,20 @@
 <link href="https://fonts.googleapis.com/css2?family=Lalezar&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#0b0a09;--text:#fff6ea;--muted:#c3b09a;--line:rgba(255,186,92,.22);--gold:#ffb43a;--mint:#3ee39a;--ink:#140f0a}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:Lalezar,Tahoma;color:var(--text);background:radial-gradient(circle at 12% 0%,rgba(255,180,58,.18),transparent 32%),linear-gradient(180deg,#120e0b,#070605)}.wrap{width:min(720px,calc(100% - 30px));margin:auto;padding:55px 0}.card{padding:28px;border-radius:28px;border:1px solid var(--line);background:linear-gradient(165deg,rgba(255,180,58,.12),rgba(255,255,255,.03));box-shadow:0 28px 70px rgba(0,0,0,.55);text-align:center}.gold{color:var(--gold)}input{width:100%;padding:14px;border-radius:14px;border:1px solid var(--line);background:rgba(0,0,0,.38);color:var(--text);font:18px Lalezar;outline:none}.btn{border:0;cursor:pointer;border-radius:16px;padding:12px 18px;font:18px Lalezar;margin:5px;box-shadow:0 5px 0 rgba(0,0,0,.3)}.goldbtn{background:linear-gradient(180deg,#ffd27a,#ff9d1f);color:var(--ink)}.mint{background:linear-gradient(180deg,#6af3b8,#17c77a);color:#042016}.ghost{background:rgba(255,255,255,.06);color:var(--text);border:1px solid var(--line);box-shadow:none}.rose{background:linear-gradient(180deg,#ff8a97,#e23b4d);color:#fff}.hidden{display:none!important}.muted{color:var(--muted)}.status{margin:14px 0;color:var(--muted);min-height:28px}.token{direction:ltr;text-align:left;word-break:break-all;padding:12px;border-radius:12px;background:rgba(0,0,0,.3);margin:8px 0}.spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(0,0,0,.25);border-top-color:#111;border-radius:50%;animation:spin .7s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}.actions{display:flex;justify-content:center;flex-wrap:wrap}.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);padding:12px 18px;border-radius:14px;background:#17120d;border:1px solid var(--line);z-index:5}.ok{color:#9dffc9}.err{color:#ffb0b7}
-</style>
+*{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:Lalezar,Tahoma;color:var(--text);background:radial-gradient(circle at 12% 0%,rgba(255,180,58,.18),transparent 32%),linear-gradient(180deg,#120e0b,#070605)}.wrap{width:min(720px,calc(100% - 30px));margin:auto;padding:55px 0}.card{padding:22px;border-radius:22px;border:1px solid var(--line);background:linear-gradient(165deg,rgba(255,180,58,.12),rgba(255,255,255,.03));box-shadow:0 28px 70px rgba(0,0,0,.55);text-align:center}.gold{color:var(--gold)}input{width:100%;padding:11px;border-radius:12px;border:1px solid var(--line);background:rgba(0,0,0,.38);color:var(--text);font:16px Lalezar;outline:none}.btn{border:0;cursor:pointer;border-radius:16px;padding:12px 18px;font:16px Lalezar;margin:5px;box-shadow:0 5px 0 rgba(0,0,0,.3)}.goldbtn{background:linear-gradient(180deg,#ffd27a,#ff9d1f);color:var(--ink)}.mint{background:linear-gradient(180deg,#6af3b8,#17c77a);color:#042016}.ghost{background:rgba(255,255,255,.06);color:var(--text);border:1px solid var(--line);box-shadow:none}.rose{background:linear-gradient(180deg,#ff8a97,#e23b4d);color:#fff}.hidden{display:none!important}.muted{color:var(--muted)}.status{margin:14px 0;color:var(--muted);min-height:28px}.token{direction:ltr;text-align:left;word-break:break-all;padding:10px;border-radius:11px;background:rgba(0,0,0,.3);margin:8px 0}.spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(0,0,0,.25);border-top-color:#111;border-radius:50%;animation:spin .7s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}.actions{display:flex;justify-content:center;flex-wrap:wrap}.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);padding:12px 18px;border-radius:12px;background:#17120d;border:1px solid var(--line);z-index:5}.ok{color:#9dffc9}.err{color:#ffb0b7}
+button,a,input{transition:transform .18s ease,opacity .18s ease,border-color .18s ease,box-shadow .18s ease,background .18s ease}button:not(:disabled):hover,a.btn:hover{transform:translateY(-1px)}</style>
 </head>
 <body>
 <div class="wrap">
 <div id="loginCard" class="card">
-<h1><span class="gold">HP</span>anel Vault</h1>
+<h1><span class="gold">H</span>anel <span class="gold">V</span>ault</h1>
 <p class="muted">رمز گاوصندوق را وارد کنید</p>
 <input id="pass" type="password" placeholder="رمز ورود" autocomplete="current-password">
 <button id="login" class="btn goldbtn" onclick="unlock()">ورود</button>
 <p id="status" class="status"></p>
 </div>
 <div id="sessionCard" class="card hidden">
-<h1><span class="gold">HP</span>anel Vault</h1>
+<h1><span class="gold">H</span>anel <span class="gold">V</span>ault</h1>
 <p id="sessionText" class="muted"></p>
 <div class="actions">
 <button class="btn rose" onclick="askLogout()">بله، خروج</button>
