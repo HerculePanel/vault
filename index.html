@@ -21,7 +21,9 @@
 --ink:#140f0a
 }
 
-*{box-sizing:border-box}
+*{
+box-sizing:border-box
+}
 
 body{
 margin:0;
@@ -29,58 +31,132 @@ min-height:100vh;
 font-family:Lalezar,Tahoma;
 color:var(--text);
 background:
-radial-gradient(circle at 12% 0%,rgba(255,180,58,.23),transparent 32%),
-radial-gradient(circle at 88% 30%,rgba(62,227,154,.11),transparent 30%),
-linear-gradient(180deg,#120e0b,#070605)
+radial-gradient(circle at 12% 0%,rgba(255,180,58,.20),transparent 32%),
+radial-gradient(circle at 88% 30%,rgba(62,227,154,.09),transparent 30%),
+linear-gradient(180deg,#120e0b,#070605);
+overflow-x:hidden
 }
 
+/* ---------------- Layout ---------------- */
+
 .wrap{
-width:min(720px,calc(100% - 30px));
+width:min(610px,calc(100% - 26px));
 margin:auto;
-padding:55px 0
+padding:34px 0 45px;
+display:flex;
+align-items:center;
+justify-content:center;
+min-height:100vh
 }
 
 .card{
-padding:22px;
-border-radius:22px;
+width:100%;
+padding:18px;
+border-radius:19px;
 border:1px solid var(--line);
 background:
 linear-gradient(
 145deg,
-rgba(255,255,255,.095),
-rgba(255,180,58,.065),
-rgba(255,255,255,.025)
+rgba(255,255,255,.085),
+rgba(255,180,58,.050),
+rgba(255,255,255,.020)
 );
 backdrop-filter:blur(20px);
 -webkit-backdrop-filter:blur(20px);
 box-shadow:
-0 28px 70px rgba(0,0,0,.55),
+0 24px 60px rgba(0,0,0,.48),
 inset 0 1px 0 rgba(255,255,255,.08);
-text-align:center
+text-align:center;
+animation:cardIn .55s cubic-bezier(.22,1,.36,1)
 }
 
-.gold{color:var(--gold)}
+@keyframes cardIn{
+from{
+opacity:0;
+transform:translateY(14px) scale(.98)
+}
+to{
+opacity:1;
+transform:none
+}
+}
+
+/* ---------------- Brand ---------------- */
+
+.brand{
+font-size:29px;
+line-height:1.1;
+margin:0 0 7px
+}
+
+.gold{
+color:var(--gold)
+}
+
+.subtitle{
+font-size:15px;
+margin:0 0 15px
+}
+
+.muted{
+color:var(--muted)
+}
+
+/* ---------------- Login ---------------- */
+
+.login-area{
+max-width:430px;
+margin:auto
+}
+
+.input-wrap{
+position:relative;
+margin:12px 0
+}
+
+.input-wrap .bi{
+position:absolute;
+right:11px;
+top:50%;
+transform:translateY(-50%);
+font-size:15px;
+color:var(--gold);
+pointer-events:none
+}
 
 input{
 width:100%;
-padding:11px;
-border-radius:12px;
+padding:9px 36px 9px 10px;
+border-radius:11px;
 border:1px solid var(--line);
-background:rgba(255,255,255,.055);
+background:rgba(255,255,255,.05);
 backdrop-filter:blur(10px);
+-webkit-backdrop-filter:blur(10px);
 color:var(--text);
-font:16px Lalezar;
+font:14px Lalezar;
 outline:none
 }
+
+input:focus{
+border-color:rgba(255,180,58,.55);
+box-shadow:0 0 0 3px rgba(255,180,58,.08)
+}
+
+/* ---------------- Buttons ---------------- */
 
 .btn{
 border:0;
 cursor:pointer;
-border-radius:16px;
-padding:12px 18px;
-font:16px Lalezar;
-margin:5px;
-box-shadow:0 5px 0 rgba(0,0,0,.3)
+border-radius:13px;
+padding:9px 14px;
+font:14px Lalezar;
+margin:3px;
+box-shadow:0 4px 0 rgba(0,0,0,.28);
+text-decoration:none;
+display:inline-flex;
+align-items:center;
+justify-content:center;
+gap:4px
 }
 
 .goldbtn{
@@ -94,7 +170,7 @@ color:#042016
 }
 
 .ghost{
-background:rgba(255,255,255,.06);
+background:rgba(255,255,255,.055);
 color:var(--text);
 border:1px solid var(--line);
 box-shadow:none
@@ -105,37 +181,108 @@ background:linear-gradient(180deg,#ff8a97,#e23b4d);
 color:#fff
 }
 
-.hidden{
-display:none!important
+.btn:disabled{
+opacity:.55;
+cursor:wait
 }
 
-.muted{
-color:var(--muted)
-}
+/* ---------------- Status ---------------- */
 
 .status{
-margin:14px 0;
+margin:10px 0 0;
 color:var(--muted);
-min-height:28px
+font-size:13px;
+min-height:20px
+}
+
+.session-status{
+padding:9px 11px;
+margin:11px auto;
+max-width:470px;
+border-radius:12px;
+background:rgba(255,255,255,.035);
+border:1px solid rgba(255,186,92,.10);
+color:var(--muted);
+font-size:14px
+}
+
+/* ---------------- Actions ---------------- */
+
+.actions{
+display:flex;
+justify-content:center;
+align-items:center;
+flex-wrap:wrap;
+gap:3px;
+margin-top:10px
+}
+
+/* ---------------- Token Viewer ---------------- */
+
+.token-panel{
+margin:14px auto 4px;
+max-width:520px;
+text-align:right;
+padding:12px;
+border-radius:15px;
+background:rgba(255,255,255,.035);
+border:1px solid var(--line);
+animation:tokenIn .4s cubic-bezier(.22,1,.36,1)
+}
+
+@keyframes tokenIn{
+from{
+opacity:0;
+transform:translateY(8px)
+}
+to{
+opacity:1;
+transform:none
+}
+}
+
+.token-heading{
+margin:0 0 8px;
+font-size:16px;
+color:var(--gold)
+}
+
+.token-item{
+margin:8px 0
+}
+
+.token-name{
+font-size:14px;
+margin-bottom:4px
 }
 
 .token{
 direction:ltr;
 text-align:left;
 word-break:break-all;
-padding:10px;
-border-radius:11px;
+padding:9px;
+border-radius:10px;
 background:rgba(255,255,255,.045);
 backdrop-filter:blur(10px);
-margin:8px 0;
-border:1px solid rgba(255,186,92,.10)
+-webkit-backdrop-filter:blur(10px);
+border:1px solid rgba(255,186,92,.10);
+font-family:monospace;
+font-size:11px;
+line-height:1.5
 }
+
+.no-token{
+font-size:13px;
+color:var(--muted)
+}
+
+/* ---------------- Spinner ---------------- */
 
 .spinner{
 display:inline-block;
-width:16px;
-height:16px;
-border:2px solid rgba(0,0,0,.25);
+width:14px;
+height:14px;
+border:2px solid rgba(0,0,0,.22);
 border-top-color:#111;
 border-radius:50%;
 animation:spin .7s linear infinite;
@@ -143,34 +290,35 @@ vertical-align:-3px
 }
 
 @keyframes spin{
-to{transform:rotate(360deg)}
+to{
+transform:rotate(360deg)
+}
 }
 
-.actions{
-display:flex;
-justify-content:center;
-flex-wrap:wrap
-}
+/* ---------------- Toast ---------------- */
 
 .toast{
 position:fixed;
-bottom:20px;
+bottom:18px;
 left:50%;
-transform:translate(-50%,22px) scale(.96);
-padding:12px 18px;
-border-radius:12px;
-background:rgba(23,18,13,.68);
+transform:translate(-50%,20px) scale(.96);
+padding:10px 15px;
+border-radius:11px;
+background:rgba(23,18,13,.72);
 backdrop-filter:blur(18px);
 -webkit-backdrop-filter:blur(18px);
 border:1px solid var(--line);
-box-shadow:0 18px 45px rgba(0,0,0,.35);
-z-index:5;
+box-shadow:
+0 16px 40px rgba(0,0,0,.35),
+inset 0 1px 0 rgba(255,255,255,.06);
+z-index:200;
 opacity:0;
-animation:toastIn .55s cubic-bezier(.22,1,.36,1) forwards
+animation:toastIn .45s cubic-bezier(.22,1,.36,1) forwards;
+font-size:13px
 }
 
 .toast.hide{
-animation:toastOut .55s cubic-bezier(.55,0,.78,.18) forwards
+animation:toastOut .45s cubic-bezier(.55,0,.78,.18) forwards
 }
 
 @keyframes toastIn{
@@ -183,39 +331,46 @@ transform:translate(-50%,0) scale(1)
 @keyframes toastOut{
 to{
 opacity:0;
-transform:translate(-50%,18px) scale(.94)
+transform:translate(-50%,15px) scale(.94)
 }
 }
 
-.ok{color:#9dffc9}
-.err{color:#ffb0b7}
+.ok{
+color:#9dffc9
+}
 
-button,a,input{
+.err{
+color:#ffb0b7
+}
+
+/* ---------------- General ---------------- */
+
+button,
+a,
+input{
 transition:
-transform .5s cubic-bezier(.22,1,.36,1),
-opacity .5s ease,
-border-color .5s ease,
-box-shadow .5s ease,
-background .5s ease
+transform .35s cubic-bezier(.22,1,.36,1),
+opacity .35s ease,
+border-color .35s ease,
+box-shadow .35s ease,
+background .35s ease
 }
 
 button:not(:disabled):hover,
 a.btn:hover{
-transform:translateY(-3px)
+transform:translateY(-2px)
 }
 
-button:disabled{
-opacity:.55;
-cursor:wait
+.hidden{
+display:none!important
 }
 
 .bi{
 display:inline-block;
-vertical-align:-.12em;
-margin-inline-end:6px
+vertical-align:-.12em
 }
 
-/* Custom Alert / Confirm */
+/* ---------------- Custom Dialog ---------------- */
 
 .custom-dialog{
 position:fixed;
@@ -227,7 +382,7 @@ display:flex;
 align-items:center;
 justify-content:center;
 z-index:150;
-animation:dialogIn .35s cubic-bezier(.22,1,.36,1)
+animation:dialogIn .3s cubic-bezier(.22,1,.36,1)
 }
 
 .custom-dialog.hidden{
@@ -239,17 +394,17 @@ animation:dialogOut .3s cubic-bezier(.55,0,.78,.18) forwards
 }
 
 .custom-dialog-box{
-width:min(500px,calc(100% - 30px));
-padding:21px;
-border-radius:20px;
+width:min(450px,calc(100% - 26px));
+padding:17px;
+border-radius:17px;
 border:1px solid var(--line);
-background:rgba(22,17,12,.78);
+background:rgba(22,17,12,.80);
 backdrop-filter:blur(22px);
 -webkit-backdrop-filter:blur(22px);
 box-shadow:
-0 28px 80px rgba(0,0,0,.55),
+0 25px 70px rgba(0,0,0,.55),
 inset 0 1px 0 rgba(255,255,255,.08);
-animation:dialogBoxIn .4s cubic-bezier(.22,1,.36,1)
+animation:dialogBoxIn .35s cubic-bezier(.22,1,.36,1)
 }
 
 .custom-dialog.closing .custom-dialog-box{
@@ -257,27 +412,28 @@ animation:dialogBoxOut .3s cubic-bezier(.55,0,.78,.18) forwards
 }
 
 .dialog-title{
-margin:0 0 8px;
-font-size:23px
+margin:0 0 7px;
+font-size:20px
 }
 
 .dialog-message{
 color:var(--muted);
-line-height:1.9;
+line-height:1.8;
+font-size:13px;
 white-space:pre-wrap
 }
 
 .dialog-icon{
-font-size:25px;
+font-size:21px;
 vertical-align:-.12em;
-margin-inline-end:7px
+margin-inline-end:6px
 }
 
 .dialog-actions{
 display:flex;
-gap:6px;
+gap:5px;
 flex-wrap:wrap;
-margin-top:17px
+margin-top:13px
 }
 
 @keyframes dialogIn{
@@ -293,7 +449,7 @@ to{opacity:0}
 @keyframes dialogBoxIn{
 from{
 opacity:0;
-transform:translateY(18px) scale(.96)
+transform:translateY(15px) scale(.97)
 }
 to{
 opacity:1;
@@ -304,8 +460,51 @@ transform:none
 @keyframes dialogBoxOut{
 to{
 opacity:0;
-transform:translateY(16px) scale(.96)
+transform:translateY(13px) scale(.97)
 }
+}
+
+/* ---------------- Mobile ---------------- */
+
+@media(max-width:520px){
+
+.wrap{
+width:calc(100% - 18px);
+padding:18px 0
+}
+
+.card{
+padding:15px;
+border-radius:17px
+}
+
+.brand{
+font-size:25px
+}
+
+.subtitle{
+font-size:14px
+}
+
+.btn{
+font-size:13px;
+padding:8px 11px;
+border-radius:11px
+}
+
+input{
+font-size:13px;
+padding:8px 34px 8px 9px
+}
+
+.session-status{
+font-size:13px
+}
+
+.token{
+font-size:10px
+}
+
 }
 </style>
 </head>
@@ -314,14 +513,25 @@ transform:translateY(16px) scale(.96)
 
 <div class="wrap">
 
+<!-- ================= Login Card ================= -->
+
 <div id="loginCard" class="card">
 
-<!-- Brand intentionally has NO icon -->
-<h1>
-<span class="gold">H</span>Panel Vault
+<div class="login-area">
+
+<!-- Brand: H, P and V are gold -->
+<h1 class="brand">
+<span class="gold">H</span><span class="gold">P</span>anel
+<span class="gold">V</span>ault
 </h1>
 
-<p class="muted">رمز گاوصندوق را وارد کنید</p>
+<p class="subtitle muted">
+رمز گاوصندوق را وارد کنید
+</p>
+
+<div class="input-wrap">
+
+<i class="bi bi-key-fill"></i>
 
 <input
 id="pass"
@@ -330,7 +540,13 @@ placeholder="رمز ورود"
 autocomplete="current-password"
 >
 
-<button id="login" class="btn goldbtn" onclick="unlock()">
+</div>
+
+<button
+id="login"
+class="btn goldbtn"
+onclick="unlock()"
+>
 <i class="bi bi-unlock"></i>
 ورود
 </button>
@@ -339,24 +555,38 @@ autocomplete="current-password"
 
 </div>
 
+</div>
+
+
+<!-- ================= Session Card ================= -->
 
 <div id="sessionCard" class="card hidden">
 
-<!-- Brand intentionally has NO icon -->
-<h1>
-<span class="gold">H</span>Panel Vault
+<!-- Brand: H, P and V are gold -->
+<h1 class="brand">
+<span class="gold">H</span><span class="gold">P</span>anel
+<span class="gold">V</span>ault
 </h1>
 
-<p id="sessionText" class="muted"></p>
+<div
+id="sessionText"
+class="session-status"
+></div>
 
 <div class="actions">
 
-<button class="btn rose" onclick="askLogout()">
+<button
+class="btn rose"
+onclick="askLogout()"
+>
 <i class="bi bi-box-arrow-right"></i>
 بله، خروج
 </button>
 
-<button class="btn ghost" onclick="cancelLogout()">
+<button
+class="btn ghost"
+onclick="cancelLogout()"
+>
 <i class="bi bi-x-lg"></i>
 خیر
 </button>
@@ -372,9 +602,16 @@ onclick="showTokens()"
 
 </div>
 
-<div id="tokens" class="hidden"></div>
 
-<br>
+<!-- Token Viewer -->
+
+<div
+id="tokens"
+class="token-panel hidden"
+></div>
+
+
+<div style="margin-top:13px">
 
 <a
 class="btn mint"
@@ -388,18 +625,32 @@ href="https://herculepanel.github.io/"
 
 </div>
 
+</div>
 
-<!-- Custom Alert / Confirm -->
 
-<div id="customDialog" class="custom-dialog hidden">
+<!-- ================= Custom Dialog ================= -->
+
+<div
+id="customDialog"
+class="custom-dialog hidden"
+>
 
 <div class="custom-dialog-box">
 
-<h2 id="dialogTitle" class="dialog-title"></h2>
+<h2
+id="dialogTitle"
+class="dialog-title"
+></h2>
 
-<div id="dialogMessage" class="dialog-message"></div>
+<div
+id="dialogMessage"
+class="dialog-message"
+></div>
 
-<div id="dialogActions" class="dialog-actions"></div>
+<div
+id="dialogActions"
+class="dialog-actions"
+></div>
 
 </div>
 
@@ -408,11 +659,24 @@ href="https://herculepanel.github.io/"
 
 <script>
 
+/* =========================================================
+   CONFIG
+========================================================= */
+
 const CONFIG={
 vaultFile:"vault.enc.json"
 };
 
 const AUTH_KEY="hpanel_auth";
+
+/*
+ * Stores the admin's decrypted Vault items so that
+ * the token viewer can work after reopening the page.
+ *
+ * This is only populated for admin sessions and is
+ * deleted during logout.
+ */
+const ADMIN_ITEMS_KEY="hpanel_vault_items";
 
 const KEYS={
 dash:"hpanel_dashboard_token",
@@ -424,7 +688,9 @@ let items=[];
 let password="";
 
 
-/* ---------------- Toast ---------------- */
+/* =========================================================
+   Toast
+========================================================= */
 
 function toast(t,c=""){
 
@@ -441,15 +707,17 @@ setTimeout(()=>{
 x.classList.add("hide");
 
 setTimeout(()=>{
-x.remove()
-},550);
+x.remove();
+},450);
 
 },3200);
 
 }
 
 
-/* ---------------- Custom Dialog ---------------- */
+/* =========================================================
+   Custom Dialog
+========================================================= */
 
 function closeCustomDialog(){
 
@@ -594,7 +862,9 @@ resolve(false);
 }
 
 
-/* ---------------- Encryption ---------------- */
+/* =========================================================
+   Base64
+========================================================= */
 
 function b64(s){
 
@@ -609,6 +879,10 @@ return a;
 
 }
 
+
+/* =========================================================
+   Encryption
+========================================================= */
 
 async function keyFor(p,salt){
 
@@ -680,7 +954,9 @@ return r.json();
 }
 
 
-/* ---------------- Auth ---------------- */
+/* =========================================================
+   Authentication Storage
+========================================================= */
 
 function saveAuth(admin,data){
 
@@ -693,6 +969,12 @@ at:Date.now()
 })
 );
 
+
+/*
+ * Dashboard and Radio tokens are stored separately
+ * because the other HPanel pages use these keys.
+ */
+
 if(data?.items){
 
 for(const x of data.items){
@@ -703,12 +985,14 @@ const n=
 String(x.name||"").toLowerCase();
 
 if(n.includes("radio"))
+
 localStorage.setItem(
 KEYS.radio,
 x.token
 );
 
 else if(n.includes("dash"))
+
 localStorage.setItem(
 KEYS.dash,
 x.token
@@ -716,10 +1000,72 @@ x.token
 
 }
 
+
+/*
+ * IMPORTANT FIX:
+ *
+ * Admin token data is saved so that the token viewer
+ * still has its data after reopening the Vault page.
+ */
+
+if(admin){
+
+try{
+
+localStorage.setItem(
+ADMIN_ITEMS_KEY,
+JSON.stringify(data.items||[])
+);
+
+}catch{
+
+console.warn(
+"Could not save admin Vault items"
+);
+
+}
+
 }
 
 }
 
+}
+
+
+/* =========================================================
+   Restore Admin Items
+========================================================= */
+
+function restoreAdminItems(){
+
+try{
+
+const raw=
+localStorage.getItem(
+ADMIN_ITEMS_KEY
+);
+
+if(!raw)return [];
+
+const parsed=
+JSON.parse(raw);
+
+return Array.isArray(parsed)
+?parsed
+:[];
+
+}catch{
+
+return [];
+
+}
+
+}
+
+
+/* =========================================================
+   Get Auth
+========================================================= */
 
 function getAuth(){
 
@@ -740,7 +1086,9 @@ return null;
 }
 
 
-/* ---------------- Session ---------------- */
+/* =========================================================
+   Session
+========================================================= */
 
 function showSession(a){
 
@@ -748,11 +1096,14 @@ current=a;
 
 document
 .getElementById("loginCard")
-.classList.add("hidden");
+.classList
+.add("hidden");
 
 document
 .getElementById("sessionCard")
-.classList.remove("hidden");
+.classList
+.remove("hidden");
+
 
 document
 .getElementById("sessionText")
@@ -760,6 +1111,7 @@ document
 a.admin
 ?"شما به عنوان مدیر وارد شده‌اید. از حساب خارج شوید؟"
 :"شما وارد شده‌اید. از حساب خارج شوید؟";
+
 
 document
 .getElementById("viewBtn")
@@ -769,10 +1121,24 @@ document
 !a.admin
 );
 
+
+/*
+ * If this is an admin session, restore the token
+ * data saved from the previous successful login.
+ */
+
+if(a.admin){
+
+items=restoreAdminItems();
+
+}
+
 }
 
 
-/* ---------------- Login ---------------- */
+/* =========================================================
+   Login
+========================================================= */
 
 async function unlock(){
 
@@ -781,6 +1147,7 @@ document
 .getElementById("pass")
 .value
 .trim();
+
 
 if(!entered){
 
@@ -793,8 +1160,10 @@ return;
 
 }
 
+
 const admin=
 entered.endsWith("_thisisadmin");
+
 
 const base=
 admin
@@ -804,13 +1173,18 @@ admin
 )
 :entered;
 
+
 const btn=
 document.getElementById("login");
 
 btn.disabled=true;
 
 btn.innerHTML=
-`<i class="bi bi-hourglass-split"></i>در حال بررسی <span class="spinner"></span>`;
+`
+<i class="bi bi-hourglass-split"></i>
+در حال بررسی
+<span class="spinner"></span>
+`;
 
 
 try{
@@ -824,24 +1198,41 @@ base,
 pack
 );
 
+
 items=
 Array.isArray(data.items)
 ?data.items
 :[];
+
+
+/*
+ * Save authentication state and token data.
+ */
 
 saveAuth(
 admin,
 data
 );
 
+
+/*
+ * Keep the base password only in memory while
+ * this page is open. It is NOT saved to localStorage.
+ */
+
+password=base;
+
+
 showSession({
 admin
 });
+
 
 toast(
 "ورود موفق بود",
 "ok"
 );
+
 
 }catch(e){
 
@@ -855,14 +1246,19 @@ toast(
 btn.disabled=false;
 
 btn.innerHTML=
-`<i class="bi bi-unlock"></i>ورود`;
+`
+<i class="bi bi-unlock"></i>
+ورود
+`;
 
 }
 
 }
 
 
-/* ---------------- Logout ---------------- */
+/* =========================================================
+   Logout
+========================================================= */
 
 async function askLogout(){
 
@@ -902,8 +1298,21 @@ localStorage.removeItem(
 KEYS.radio
 );
 
+
+/*
+ * IMPORTANT:
+ * Remove persisted admin token data when logging out.
+ */
+
+localStorage.removeItem(
+ADMIN_ITEMS_KEY
+);
+
+
 current=null;
 items=[];
+password="";
+
 
 document
 .getElementById("tokens")
@@ -913,6 +1322,7 @@ document
 document
 .getElementById("tokens")
 .innerHTML="";
+
 
 document
 .getElementById("sessionCard")
@@ -924,9 +1334,11 @@ document
 .classList
 .remove("hidden");
 
+
 document
 .getElementById("pass")
 .value="";
+
 
 toast(
 "خارج شدی",
@@ -936,28 +1348,56 @@ toast(
 }
 
 
-/* ---------------- Token Viewer ---------------- */
+/* =========================================================
+   Token Viewer
+========================================================= */
 
 function showTokens(){
 
 if(!current?.admin)return;
 
+
+/*
+ * If the in-memory list is empty, try restoring it.
+ * This fixes the page-reopen case.
+ */
+
+if(!items.length){
+
+items=restoreAdminItems();
+
+}
+
+
 const box=
 document.getElementById("tokens");
 
+
 box.classList.remove("hidden");
 
-box.innerHTML=
+
+box.innerHTML=`
+
+<h3 class="token-heading">
+<i class="bi bi-key-fill"></i>
+توکن‌های ذخیره‌شده
+</h3>
+
+${
 items.length
 
 ?items.map(x=>`
 
-<div>
+<div class="token-item">
+
+<div class="token-name">
 
 <b>
-<i class="bi bi-key-fill"></i>
+<i class="bi bi-key"></i>
 ${esc(x.name||"توکن")}
 </b>
+
+</div>
 
 <div class="token">
 ${esc(x.token||"")}
@@ -969,17 +1409,23 @@ ${esc(x.token||"")}
 
 :`
 
-<p class="muted">
+<p class="no-token">
 <i class="bi bi-info-circle"></i>
 توکنی پیدا نشد.
 </p>
+
+`
+
+}
 
 `;
 
 }
 
 
-/* ---------------- Escape ---------------- */
+/* =========================================================
+   Escape
+========================================================= */
 
 function esc(s){
 
@@ -993,17 +1439,38 @@ return String(s??"")
 }
 
 
-/* ---------------- Startup ---------------- */
+/* =========================================================
+   Startup
+========================================================= */
 
 (async()=>{
 
 const a=getAuth();
 
-if(a?.loggedIn)
+
+if(a?.loggedIn){
+
+/*
+ * Restore admin token data immediately.
+ */
+
+if(a.admin){
+
+items=restoreAdminItems();
+
+}
+
+
 showSession(a);
+
+}
 
 })();
 
+
+/* =========================================================
+   Enter Key
+========================================================= */
 
 document
 .getElementById("pass")
