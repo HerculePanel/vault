@@ -15,8 +15,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 5
+
     steps:
-      - uses: actions/checkout@v4
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Encrypt tokens into vault.enc.json
         env:
@@ -24,44 +27,84 @@ jobs:
           DASHBOARD_TOKEN: ${{ secrets.DASHBOARD_TOKEN }}
           RADIO_TOKEN: ${{ secrets.RADIO_TOKEN }}
           VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
+
         run: |
           set -e
+
           python3 - <<'PY'
-          import base64, hashlib, json, os
+          import base64
+          import hashlib
+          import json
+          import os
+
           password = os.environ.get("VAULT_PASSWORD") or ""
           dash = os.environ.get("DASHBOARD_TOKEN") or ""
           radio = os.environ.get("RADIO_TOKEN") or ""
           vault = os.environ.get("VAULT_TOKEN") or ""
+
           if not password:
               raise SystemExit("VAULT_PASSWORD secret is empty")
+
           payload = json.dumps({
               "dispatch": vault,
               "items": [
-                  {"name": "HPanel Dashboard v1.2", "token": dash},
-                  {"name": "HPanel Radio", "token": radio}
+                  {
+                      "name": "HPanel Dashboard v1.3",
+                      "token": dash
+                  },
+                  {
+                      "name": "HPanel Radio",
+                      "token": radio
+                  }
               ]
           }, ensure_ascii=False)
+
           salt = os.urandom(16)
-          key = hashlib.pbkdf2_hmac("sha256", password.encode("utf-8"), salt, 100000, 32)
+
+          key = hashlib.pbkdf2_hmac(
+              "sha256",
+              password.encode("utf-8"),
+              salt,
+              100000,
+              32
+          )
+
           raw = payload.encode("utf-8")
-          blob = bytes(b ^ key[i % 32] for i, b in enumerate(raw))
+
+          blob = bytes(
+              b ^ key[i % 32]
+              for i, b in enumerate(raw)
+          )
+
           out = {
               "v": 1,
               "salt": base64.b64encode(salt).decode("ascii"),
               "blob": base64.b64encode(blob).decode("ascii")
           }
-          with open("vault.enc.json", "w", encoding="utf-8") as f:
+
+          with open(
+              "vault.enc.json",
+              "w",
+              encoding="utf-8"
+          ) as f:
               json.dump(out, f)
               f.write("\n")
+
           print("wrote vault.enc.json")
           PY
 
       - name: Commit vault.enc.json
         run: |
           set -e
+
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
+
           git add vault.enc.json
-          git diff --cached --quiet && echo "no change" && exit 0
+
+          git diff --cached --quiet && \
+            echo "no change" && \
+            exit 0
+
           git commit -m "Update encrypted vault file"
           git push
