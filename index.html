@@ -30,90 +30,52 @@
         linear-gradient(180deg, #120e0b, #070605);
     }
     .gold { color: var(--gold); }
-    .login-modal {
+    .login-modal, .tokens-modal {
       position: fixed; inset: 0; z-index: 1000;
       display: flex; align-items: center; justify-content: center;
       background: rgba(8,6,4,.78); backdrop-filter: blur(16px);
+      opacity: 1; visibility: visible;
       transition: opacity .35s ease, visibility .35s ease;
     }
-    .login-modal.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-    .card-box {
-      width: min(520px, calc(100% - 32px));
-      padding: 30px 26px; border-radius: 28px;
-      border: 1px solid var(--line);
-      background: linear-gradient(165deg, rgba(255,180,58,.12), rgba(255,255,255,.03));
-      box-shadow: var(--shadow); text-align: center;
+    .login-modal.hidden, .tokens-modal.hidden {
+      opacity: 0; visibility: hidden; pointer-events: none;
     }
+    .card-box { width: min(520px, calc(100% - 32px)); padding: 30px 26px; border-radius: 28px; border: 1px solid var(--line); background: linear-gradient(165deg, rgba(255,180,58,.12), rgba(255,255,255,.03)); box-shadow: var(--shadow); text-align: center; }
     h1 { margin: 0 0 8px; }
     .sub { margin: 0 0 16px; color: var(--muted); font-size: 16px; }
     .field { text-align: right; margin-bottom: 10px; }
     .field label { display: block; margin-bottom: 6px; color: var(--gold); font-size: 15px; }
-    input {
-      width: 100%; padding: 13px 14px; border-radius: 14px;
-      border: 1px solid var(--line); background: rgba(0,0,0,.38);
-      color: var(--text); outline: none; font-family: inherit; font-size: 16px;
-    }
+    input { width: 100%; padding: 13px 14px; border-radius: 14px; border: 1px solid var(--line); background: rgba(0,0,0,.38); color: var(--text); outline: none; font-family: inherit; font-size: 16px; }
     .ltr { direction: ltr; text-align: left; unicode-bidi: isolate; }
-    .btn {
-      border: 0; cursor: pointer; border-radius: 16px; padding: 12px 14px;
-      font-family: inherit; font-size: 17px;
-      box-shadow: 0 6px 0 rgba(0,0,0,.35);
-      display: inline-flex; align-items: center; justify-content: center; gap: 10px;
-    }
+    .btn { border: 0; cursor: pointer; border-radius: 16px; padding: 12px 14px; font-family: inherit; font-size: 17px; box-shadow: 0 6px 0 rgba(0,0,0,.35); display: inline-flex; align-items: center; justify-content: center; gap: 10px; }
     .btn:active:not(:disabled) { transform: translateY(3px); box-shadow: 0 3px 0 rgba(0,0,0,.35); }
     .btn:disabled { opacity: .4; cursor: not-allowed; }
     .btn-gold { background: linear-gradient(180deg, #ffd27a, #ff9d1f); color: var(--ink); }
+    .btn-mint { background: linear-gradient(180deg, #6af3b8, #17c77a); color: #042016; }
     .btn-rose { background: linear-gradient(180deg, #ff8a97, #e23b4d); color: #fff; }
     .btn-home { background: linear-gradient(180deg, #8ab0ff, #4d7dff); color: #061018; text-decoration:none; }
-    .btn-refresh {
-      background: linear-gradient(180deg, #7dfff0, #19c4b8);
-      color: #04221f; border: 1px solid rgba(125,255,240,.45);
-    }
+    .btn-refresh { background: linear-gradient(180deg, #7dfff0, #19c4b8); color: #04221f; border: 1px solid rgba(125,255,240,.45); }
     .btn-ghost { background: rgba(255,255,255,.06); color: var(--text); border: 1px solid var(--line); box-shadow: none; }
-    .spin {
-      width: 16px; height: 16px; border-radius: 50%;
-      border: 2px solid rgba(20,15,10,.25); border-top-color: var(--ink);
-      display: inline-block; animation: spin .7s linear infinite;
-    }
+    .spin { width: 16px; height: 16px; border-radius: 50%; border: 2px solid rgba(20,15,10,.25); border-top-color: var(--ink); display: inline-block; animation: spin .7s linear infinite; }
+    .spin.light { border-color: rgba(255,255,255,.25); border-top-color: #fff6ea; }
     @keyframes spin { to { transform: rotate(360deg); } }
-    .app {
-      width: min(900px, calc(100% - 30px));
-      margin: auto; padding: 36px 0 80px;
-      opacity: 0; transform: translateY(12px); pointer-events: none; transition: .35s ease;
-    }
+    .app { width: min(900px, calc(100% - 30px)); margin: auto; padding: 36px 0 80px; opacity: 0; transform: translateY(12px); pointer-events: none; transition: .35s ease; }
     .app.visible { opacity: 1; transform: none; pointer-events: auto; }
     .hero { display: flex; justify-content: space-between; gap: 16px; align-items: center; flex-wrap: wrap; margin-bottom: 18px; }
     .brand { font-size: clamp(28px, 5vw, 44px); }
+    .badge { display: none; margin-top: 8px; padding: 5px 10px; border-radius: 999px; background: rgba(62,227,154,.16); color: var(--mint); font-size: 14px; }
+    .badge.on, .badge-admin { color: var(--gold); }
     .hero-actions { display: flex; gap: 8px; flex-wrap: wrap; }
-    .badge {
-      display: inline-block; margin-top: 8px; padding: 5px 10px; border-radius: 999px;
-      background: rgba(62,227,154,.16); color: var(--mint); font-size: 14px;
-    }
     .panel { padding: 16px; border-radius: 22px; border: 1px solid var(--line); background: rgba(255,255,255,.03); }
     .hint { color: var(--muted); font-size: 14px; margin: 0 0 12px; text-align: right; }
-    .status {
-      margin-bottom: 12px; padding: 10px 12px; border-radius: 12px;
-      border: 1px solid var(--line); background: rgba(0,0,0,.22); color: var(--muted);
-    }
-    .item {
-      padding: 14px 16px; border-radius: 16px; margin-bottom: 10px;
-      border: 1px solid var(--line); background: rgba(255,255,255,.04);
-    }
+    .item { padding: 14px 16px; border-radius: 16px; margin-bottom: 10px; border: 1px solid var(--line); background: rgba(255,255,255,.04); }
     .item-title { font-size: 20px; }
-    .token-box {
-      margin-top: 8px; padding: 10px 12px; border-radius: 12px;
-      background: rgba(0,0,0,.28); word-break: break-all;
-      font-size: 13px; color: var(--muted);
-    }
+    .token-box { margin-top: 8px; padding: 10px 12px; border-radius: 12px; background: rgba(0,0,0,.28); word-break: break-all; font-size: 13px; color: var(--muted); }
     .row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
     .row .btn { flex: 1; min-width: 90px; }
     .empty { color: var(--muted); text-align: center; padding: 24px 8px; }
     .toast-box { position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%); width: min(420px, calc(100% - 28px)); z-index: 2000; }
-    .toast {
-      margin-top: 8px; padding: 12px 14px; border-radius: 14px;
-      border: 1px solid var(--line); background: rgba(18,14,10,.94);
-      animation: toastIn .25s ease;
-    }
+    .toast { margin-top: 8px; padding: 12px 14px; border-radius: 14px; border: 1px solid var(--line); background: rgba(18,14,10,.94); animation: toastIn .25s ease; }
     .toast.out { animation: toastOut .28s ease forwards; }
     @keyframes toastIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
     @keyframes toastOut { to { opacity: 0; transform: translateY(12px); } }
@@ -128,9 +90,18 @@
       <p class="sub">رمز گاوصندوق را وارد کن</p>
       <div class="field">
         <label for="passInput">رمز</label>
-        <input id="passInput" type="password" placeholder="همان VAULT_PASSWORD">
+        <input id="passInput" type="password" placeholder="رمز گاوصندوق">
       </div>
       <button id="loginBtn" class="btn btn-gold" style="width:100%;margin-top:8px" onclick="unlockVault()">ورود</button>
+    </div>
+  </div>
+
+  <div id="tokensModal" class="tokens-modal hidden">
+    <div class="card-box">
+      <h1><span class="gold">HP</span>anel <span class="gold">V</span>ault</h1>
+      <p class="sub">توکن‌های داشبورد و رادیو</p>
+      <div id="tokensList"></div>
+      <button class="btn btn-rose" style="width:100%;margin-top:8px" onclick="closeTokensModal()">بستن</button>
     </div>
   </div>
 
@@ -139,17 +110,15 @@
       <div>
         <div class="brand"><span class="gold">HP</span>anel <span class="gold">V</span>ault</div>
         <p class="sub" style="margin:6px 0 0">توکن‌های داشبورد و رادیو</p>
-        <div class="badge">تأیید شده</div>
       </div>
       <div class="hero-actions">
         <button class="btn btn-rose" onclick="logout()">خروج</button>
         <a class="btn btn-home" href="https://herculepanel.github.io/">برگشت به صفحه نخست</a>
-        <button class="btn btn-refresh" id="reloadBtn" onclick="reloadFromSecrets()">تازه‌سازی</button>
+        <button class="btn btn-refresh" onclick="reloadVault()">تازه‌سازی</button>
       </div>
     </div>
     <div class="panel">
-      <div class="status" id="flowStatus">وضعیت: تأیید شده</div>
-      <p class="hint">توکن‌ها روی همین دامنه ذخیره شدند. داشبورد و رادیو بدون وارد کردن دوباره توکن باز می‌شوند.</p>
+      <p class="hint">رمز همان VAULT_PASSWORD است. توکن‌ها فقط بعد از ورود نمایش داده می‌شوند.</p>
       <div id="list"></div>
     </div>
     <div class="foot">© 2026 · <span class="gold">H</span>ercule<span class="gold">P</span>anel</div>
@@ -160,23 +129,13 @@
 const CONFIG = {
   owner: "HerculePanel",
   repo: "vault",
-  workflow: "build-vault.yml",
-  branch: "main",
-  vaultFile: "vault.enc.json",
-  api: "https://api.github.com"
-};
-const KEYS = {
-  verified: "hpanel_verified",
-  dash: "hpanel_dashboard_token",
-  radio: "hpanel_radio_token"
+  api: "https://api.github.com",
+  home: "https://herculepanel.github.io/"
 };
 
-let vaultPassword = "";
 let vaultItems = [];
 let shown = {};
-let dispatchToken = "";
-let activeRunId = null;
-let pollTimer = null;
+let vaultPassword = "";
 
 function toast(msg, type) {
   const el = document.createElement("div");
@@ -185,107 +144,44 @@ function toast(msg, type) {
   document.getElementById("toasts").appendChild(el);
   setTimeout(() => { el.classList.add("out"); setTimeout(() => el.remove(), 280); }, 3200);
 }
-function esc(s) {
-  return String(s ?? "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
-}
+function esc(s) { return String(s ?? "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;"); }
 function maskToken(token) {
   const t = String(token || "");
   if (t.length <= 10) return "••••••••";
   return t.slice(0, 7) + "••••••••" + t.slice(-4);
 }
-function setCookie(name, value) {
-  document.cookie = name + "=" + encodeURIComponent(value || "") + "; path=/; max-age=" + (30*24*60*60) + "; SameSite=Lax";
-}
-function clearCookie(name) {
-  document.cookie = name + "=; path=/; max-age=0; SameSite=Lax";
-}
-function tokenByName(part) {
-  const item = vaultItems.find(x => (x.name || "").toLowerCase().indexOf(part) >= 0);
-  return (item && item.token) || "";
-}
-function saveSession() {
-  const dash = tokenByName("dashboard");
-  const radio = tokenByName("radio");
-  localStorage.setItem(KEYS.verified, "1");
-  localStorage.setItem(KEYS.dash, dash);
-  localStorage.setItem(KEYS.radio, radio);
-  setCookie(KEYS.verified, "1");
-  setCookie(KEYS.dash, dash);
-  setCookie(KEYS.radio, radio);
-}
-function clearSession() {
-  localStorage.removeItem(KEYS.verified);
-  localStorage.removeItem(KEYS.dash);
-  localStorage.removeItem(KEYS.radio);
-  clearCookie(KEYS.verified);
-  clearCookie(KEYS.dash);
-  clearCookie(KEYS.radio);
-}
-function setLoginLoading(on) {
+function setLoading(on) {
   const btn = document.getElementById("loginBtn");
   btn.disabled = on;
   btn.innerHTML = on ? 'ورود<span class="spin"></span>' : "ورود";
 }
-function setReloadLoading(on) {
-  const btn = document.getElementById("reloadBtn");
-  btn.disabled = on;
-  btn.innerHTML = on ? 'تازه‌سازی<span class="spin"></span>' : "تازه‌سازی";
+function showApp() {
+  document.getElementById("loginModal").classList.add("hidden");
+  document.getElementById("app").classList.add("visible");
+  document.getElementById("verifyBadge").style.display = "inline-block";
+  document.getElementById("verifyBadge").textContent = localStorage.getItem("hpanel_is_admin") === "1" ? "ادمین" : "عادی";
 }
-function setStatus(text) {
-  document.getElementById("flowStatus").textContent = "وضعیت: " + text;
+function hideApp() {
+  document.getElementById("app").classList.remove("visible");
+  document.getElementById("loginModal").classList.remove("hidden");
 }
-function b64ToBytes(b64) {
-  const bin = atob(b64);
-  const out = new Uint8Array(bin.length);
-  for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
-  return out;
-}
-async function deriveKey(password, saltBytes) {
-  const material = await crypto.subtle.importKey("raw", new TextEncoder().encode(password), "PBKDF2", false, ["deriveBits"]);
-  const bits = await crypto.subtle.deriveBits({ name: "PBKDF2", salt: saltBytes, iterations: 100000, hash: "SHA-256" }, material, 256);
-  return new Uint8Array(bits);
-}
-async function decryptPack(password, pack) {
-  const salt = b64ToBytes(pack.salt);
-  const blob = b64ToBytes(pack.blob);
-  const key = await deriveKey(password, salt);
-  const raw = new Uint8Array(blob.length);
-  for (let i = 0; i < blob.length; i++) raw[i] = blob[i] ^ key[i % 32];
-  return JSON.parse(new TextDecoder().decode(raw));
-}
-async function loadEncryptedFile() {
-  const res = await fetch(CONFIG.vaultFile + "?t=" + Date.now(), { cache: "no-store" });
-  if (!res.ok) throw new Error("missing");
-  return res.json();
-}
-async function api(path, token, options) {
-  options = options || {};
-  const headers = Object.assign({
-    "Accept": "application/vnd.github+json",
-    "X-GitHub-Api-Version": "2022-11-28"
-  }, options.headers || {});
-  if (token) headers.Authorization = "Bearer " + token;
-  return fetch(CONFIG.api + path, Object.assign({}, options, { headers }));
-}
-function applyDecrypted(data) {
-  vaultItems = Array.isArray(data.items) ? data.items : [];
-  dispatchToken = data.dispatch || "";
-  shown = {};
-  saveSession();
-  renderList();
+async function loadVaultJson() {
+  const res = await fetch(CONFIG.home + "vault.enc.json?t=" + Date.now(), { cache: "no-store" });
+  if (!res.ok) throw new Error("گیست vault.json پیدا نشد");
+  return JSON.parse(await res.text());
 }
 function renderList() {
   const box = document.getElementById("list");
-  const items = vaultItems.filter(x => x && x.token);
-  if (!items.length) {
-    box.innerHTML = '<div class="empty">توکنی نیست. تازه‌سازی را بزن.</div>';
+  if (!vaultItems.length) {
+    box.innerHTML = '<div class="empty">توکنی در گیست نیست.</div>';
     return;
   }
-  box.innerHTML = items.map((item, i) => {
+  box.innerHTML = vaultItems.map((item, i) => {
+    const token = String(item.token || "");
     const open = !!shown[i];
     return '<div class="item">' +
       '<div class="item-title">' + esc(item.name || "توکن") + '</div>' +
-      '<div class="token-box ltr">' + esc(open ? item.token : maskToken(item.token)) + '</div>' +
+      '<div class="token-box ltr">' + esc(open ? token : maskToken(token)) + '</div>' +
       '<div class="row">' +
         '<button class="btn btn-gold" onclick="copyToken(' + i + ')">کپی توکن</button>' +
         '<button class="btn btn-ghost" onclick="toggleToken(' + i + ')">' + (open ? "مخفی" : "نمایش") + '</button>' +
@@ -293,112 +189,27 @@ function renderList() {
     '</div>';
   }).join("");
 }
-async function tryLocalDecrypt() {
-  const pack = await loadEncryptedFile();
-  const data = await decryptPack(vaultPassword, pack);
-  applyDecrypted(data);
-}
-async function latestRun(token) {
-  const res = await api("/repos/" + CONFIG.owner + "/" + CONFIG.repo + "/actions/workflows/" + encodeURIComponent(CONFIG.workflow) + "/runs?per_page=5", token);
-  if (!res.ok) throw new Error("خواندن ورک‌فلو ناموفق (" + res.status + ")");
-  const data = await res.json();
-  return (data.workflow_runs || [])[0] || null;
-}
-async function startWorkflow(token) {
-  const res = await api(
-    "/repos/" + CONFIG.owner + "/" + CONFIG.repo + "/actions/workflows/" + encodeURIComponent(CONFIG.workflow) + "/dispatches",
-    token,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ref: CONFIG.branch })
-    }
-  );
-  if (res.status === 204 || res.ok) return true;
-  throw new Error("شروع ورک‌فلو ناموفق (" + res.status + ")");
-}
-function stopPolling() {
-  if (pollTimer) clearInterval(pollTimer);
-  pollTimer = null;
-}
-async function waitForRun(token) {
-  stopPolling();
-  setStatus("در حال ساخت فایل...");
-  const started = Date.now();
-  return new Promise((resolve, reject) => {
-    pollTimer = setInterval(async () => {
-      try {
-        if (Date.now() - started > 180000) {
-          stopPolling();
-          reject(new Error("ورک‌فلو خیلی طول کشید"));
-          return;
-        }
-        const run = await latestRun(token);
-        if (!run) return;
-        activeRunId = run.id;
-        setStatus("#" + run.id + " · " + (run.status || "—") + (run.conclusion ? " / " + run.conclusion : ""));
-        if (run.status === "completed") {
-          stopPolling();
-          resolve(run);
-        }
-      } catch (e) {
-        stopPolling();
-        reject(e);
-      }
-    }, 2500);
-  });
-}
-async function reloadFromSecrets() {
-  if (!dispatchToken) {
-    setStatus("VAULT_TOKEN در فایل نیست");
-    return toast("Secret به نام VAULT_TOKEN بساز و ورک‌فلو را یک‌بار دستی Run کن", "error");
-  }
-  setReloadLoading(true);
-  try {
-    setStatus("تازه‌سازی شروع شد");
-    toast("در حال به‌روز کردن از Secrets", "info");
-    await startWorkflow(dispatchToken);
-    await new Promise(r => setTimeout(r, 2500));
-    const run = await waitForRun(dispatchToken);
-    activeRunId = null;
-    if (run && run.conclusion && run.conclusion !== "success") {
-      setStatus("ناموفق: " + run.conclusion);
-      return toast("ورک‌فلو موفق نبود: " + run.conclusion, "error");
-    }
-    await new Promise(r => setTimeout(r, 2000));
-    await tryLocalDecrypt();
-    setStatus("تأیید شده");
-    toast("توکن‌ها ذخیره شدند", "success");
-  } catch (e) {
-    setStatus(e.message || "خطا");
-    toast(e.message || "تازه‌سازی ناموفق", "error");
-  } finally {
-    setReloadLoading(false);
-  }
-}
 async function unlockVault() {
   const pass = (document.getElementById("passInput").value || "").trim();
   if (!pass) return toast("رمز را وارد کن", "error");
-  vaultPassword = pass;
-  setLoginLoading(true);
+  setLoading(true);
   try {
-    try {
-      await tryLocalDecrypt();
-    } catch (e) {
-      if (e.message === "missing") throw new Error("اول یک‌بار از تب Actions ورک‌فلو Build vault file را Run کن");
-      throw new Error("رمز اشتباه است");
-    }
-    document.getElementById("loginModal").classList.add("hidden");
-    document.getElementById("app").classList.add("visible");
-    setStatus("تأیید شده");
-    toast("تأیید شدی. توکن‌ها ذخیره شدند", "success");
+    const data = await loadVaultJson();
+    const real = String(data.password || data.pass || "").trim();
+    if (!real || pass !== real) throw new Error("رمز اشتباه است");
+    vaultItems = Array.isArray(data.items) ? data.items : (Array.isArray(data.tokens) ? data.tokens : []);
+    shown = {};
+    localStorage.setItem("hpanel_verified", "1");
+    localStorage.setItem("hpanel_is_admin", pass.endsWith("_thisisadmin") ? "1" : "0");
+    showApp();
+    renderList();
+    toast("گاوصندوق باز شد", "success");
   } catch (e) {
-    clearSession();
-    document.getElementById("app").classList.remove("visible");
-    document.getElementById("loginModal").classList.remove("hidden");
+    vaultItems = [];
+    hideApp();
     toast(e.message || "ورود ناموفق", "error");
   } finally {
-    setLoginLoading(false);
+    setLoading(false);
   }
 }
 function toggleToken(i) {
@@ -408,29 +219,42 @@ function toggleToken(i) {
 function copyToken(i) {
   const token = vaultItems[i] && vaultItems[i].token;
   if (!token) return;
-  navigator.clipboard.writeText(token).then(
-    () => toast("توکن کپی شد", "success"),
-    () => toast(token, "info")
-  );
+  navigator.clipboard.writeText(token).then(() => toast("توکن کپی شد", "success"), () => toast(token, "info"));
 }
 function logout() {
-  stopPolling();
+  localStorage.removeItem("hpanel_verified");
+  localStorage.removeItem("hpanel_is_admin");
   vaultItems = [];
   shown = {};
-  dispatchToken = "";
-  vaultPassword = "";
-  activeRunId = null;
-  clearSession();
   document.getElementById("list").innerHTML = "";
   document.getElementById("passInput").value = "";
-  setStatus("آماده");
-  document.getElementById("app").classList.remove("visible");
-  document.getElementById("loginModal").classList.remove("hidden");
+  hideApp();
   toast("خارج شدی", "info");
 }
-document.getElementById("passInput").addEventListener("keydown", e => {
-  if (e.key === "Enter") unlockVault();
-});
+function openTokensModal() {
+  document.getElementById("tokensList").innerHTML = renderListHtml();
+  document.getElementById("tokensModal").classList.remove("hidden");
+}
+function closeTokensModal() {
+  document.getElementById("tokensModal").classList.add("hidden");
+}
+function renderListHtml() {
+  const items = vaultItems.filter(x => x && x.token);
+  if (!items.length) return '<div class="empty">توکنی در گیست نیست.</div>';
+  return items.map((item, i) => {
+    const token = String(item.token || "");
+    const open = !!shown[i];
+    return '<div class="item">' +
+      '<div class="item-title">' + esc(item.name || "توکن") + '</div>' +
+      '<div class="token-box ltr">' + esc(open ? token : maskToken(token)) + '</div>' +
+      '<div class="row">' +
+        '<button class="btn btn-gold" onclick="copyToken(' + i + ')">کپی توکن</button>' +
+        '<button class="btn btn-ghost" onclick="toggleToken(' + i + ')">' + (open ? "مخفی" : "نمایش") + '</button>' +
+      '</div>' +
+    '</div>';
+  }).join("");
+}
+document.getElementById("passInput").addEventListener("keydown", e => { if (e.key === "Enter") unlockVault(); });
 </script>
 </body>
   </html>
