@@ -1,62 +1,1023 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>HerculePanel Vault</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HPanel Vault</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lalezar&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
 <style>
-:root{--bg:#0b0a09;--text:#fff6ea;--muted:#c3b09a;--line:rgba(255,186,92,.22);--gold:#ffb43a;--mint:#3ee39a;--ink:#140f0a}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:Lalezar,Tahoma;color:var(--text);background:radial-gradient(circle at 12% 0%,rgba(255,180,58,.23),transparent 32%),radial-gradient(circle at 88% 30%,rgba(62,227,154,.11),transparent 30%),linear-gradient(180deg,#120e0b,#070605)}.wrap{width:min(720px,calc(100% - 30px));margin:auto;padding:55px 0}.card{padding:22px;border-radius:22px;border:1px solid var(--line);background:linear-gradient(145deg,rgba(255,255,255,.095),rgba(255,180,58,.065),rgba(255,255,255,.025));backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);box-shadow:0 28px 70px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.08);text-align:center}.gold{color:var(--gold)}input{width:100%;padding:11px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.055);backdrop-filter:blur(10px);color:var(--text);font:16px Lalezar;outline:none}.btn{border:0;cursor:pointer;border-radius:16px;padding:12px 18px;font:16px Lalezar;margin:5px;box-shadow:0 5px 0 rgba(0,0,0,.3)}.goldbtn{background:linear-gradient(180deg,#ffd27a,#ff9d1f);color:var(--ink)}.mint{background:linear-gradient(180deg,#6af3b8,#17c77a);color:#042016}.ghost{background:rgba(255,255,255,.06);color:var(--text);border:1px solid var(--line);box-shadow:none}.rose{background:linear-gradient(180deg,#ff8a97,#e23b4d);color:#fff}.hidden{display:none!important}.muted{color:var(--muted)}.status{margin:14px 0;color:var(--muted);min-height:28px}.token{direction:ltr;text-align:left;word-break:break-all;padding:10px;border-radius:11px;background:rgba(255,255,255,.045);backdrop-filter:blur(10px);margin:8px 0}.spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(0,0,0,.25);border-top-color:#111;border-radius:50%;animation:spin .7s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}.actions{display:flex;justify-content:center;flex-wrap:wrap}.toast{position:fixed;bottom:20px;left:50%;transform:translate(-50%,22px) scale(.96);padding:12px 18px;border-radius:12px;background:rgba(23,18,13,.68);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid var(--line);box-shadow:0 18px 45px rgba(0,0,0,.35);z-index:5;opacity:0;animation:toastIn .55s cubic-bezier(.22,1,.36,1) forwards}.toast.hide{animation:toastOut .55s cubic-bezier(.55,0,.78,.18) forwards}@keyframes toastIn{to{opacity:1;transform:translate(-50%,0) scale(1)}}@keyframes toastOut{to{opacity:0;transform:translate(-50%,18px) scale(.94)}}.ok{color:#9dffc9}.err{color:#ffb0b7}
-button,a,input{transition:transform .5s cubic-bezier(.22,1,.36,1),opacity .5s ease,border-color .5s ease,box-shadow .5s ease,background .5s ease}button:not(:disabled):hover,a.btn:hover{transform:translateY(-3px)}</style>
-</head>
-<body>
-<div class="wrap">
-<div id="loginCard" class="card">
-<h1><span class="gold">H</span>ercule<span class="gold">P</span>anel <span class="gold">V</span>ault</h1>
-<p class="muted">رمز گاوصندوق را وارد کنید</p>
-<input id="pass" type="password" placeholder="رمز ورود" autocomplete="current-password">
-<button id="login" class="btn goldbtn" onclick="unlock()">ورود</button>
-<p id="status" class="status"></p>
-</div>
-<div id="sessionCard" class="card hidden">
-<h1><span class="gold">H</span>ercule<span class="gold">P</span>anel <span class="gold">V</span>ault</h1>
-<p id="sessionText" class="muted"></p>
-<div class="actions">
-<button class="btn rose" onclick="askLogout()">بله، خروج</button>
-<button class="btn ghost" onclick="cancelLogout()">خیر</button>
-<button id="viewBtn" class="btn goldbtn hidden" onclick="showTokens()">مشاهده توکن‌ها</button>
-</div>
-<div id="tokens" class="hidden"></div>
-<br>
-<a class="btn mint" href="https://herculepanel.github.io/">منوی اصلی</a>
-</div>
-</div>
-<script>
-const CONFIG={vaultFile:"vault.enc.json"};
-const AUTH_KEY="hpanel_auth";
-const KEYS={dash:"hpanel_dashboard_token",radio:"hpanel_radio_token"};
-let current=null,items=[],password="";
-function toast(t,c=""){const x=document.createElement("div");x.className="toast "+c;x.textContent=t;document.body.appendChild(x);setTimeout(()=>{x.classList.add("hide");setTimeout(()=>x.remove(),550)},3200)}
-function b64(s){const bin=atob(s),a=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)a[i]=bin.charCodeAt(i);return a}
-async function keyFor(p,salt){const m=await crypto.subtle.importKey("raw",new TextEncoder().encode(p),"PBKDF2",false,["deriveBits"]);const bits=await crypto.subtle.deriveBits({name:"PBKDF2",salt,iterations:100000,hash:"SHA-256"},m,256);return new Uint8Array(bits)}
-async function decrypt(p,pack){const k=await keyFor(p,b64(pack.salt)),b=b64(pack.blob),raw=new Uint8Array(b.length);for(let i=0;i<b.length;i++)raw[i]=b[i]^k[i%32];return JSON.parse(new TextDecoder().decode(raw))}
-async function loadPack(){const r=await fetch(CONFIG.vaultFile+"?t="+Date.now(),{cache:"no-store"});if(!r.ok)throw Error("فایل Vault پیدا نشد");return r.json()}
-function saveAuth(admin,data){localStorage.setItem(AUTH_KEY,JSON.stringify({loggedIn:true,admin:!!admin,at:Date.now()}));if(data?.items){for(const x of data.items){if(!x||!x.token)continue;const n=String(x.name||"").toLowerCase();if(n.includes("radio"))localStorage.setItem(KEYS.radio,x.token);else if(n.includes("dash"))localStorage.setItem(KEYS.dash,x.token)}}}
-function getAuth(){try{return JSON.parse(localStorage.getItem(AUTH_KEY)||"null")}catch{return null}}
-function showSession(a){current=a;document.getElementById("loginCard").classList.add("hidden");document.getElementById("sessionCard").classList.remove("hidden");document.getElementById("sessionText").textContent=a.admin?"شما به عنوان مدیر وارد شده‌اید. از حساب خارج شوید؟":"شما وارد شده‌اید. از حساب خارج شوید؟";document.getElementById("viewBtn").classList.toggle("hidden",!a.admin)}
-async function unlock(){
- const entered=document.getElementById("pass").value.trim();if(!entered)return toast("رمز را وارد کن","err");
- const admin=entered.endsWith("_thisisadmin"),base=admin?entered.slice(0,-"_thisisadmin".length):entered;
- const btn=document.getElementById("login");btn.disabled=true;btn.innerHTML='در حال بررسی <span class="spinner"></span>';
- try{const pack=await loadPack();const data=await decrypt(base,pack);items=Array.isArray(data.items)?data.items:[];saveAuth(admin,data);showSession({admin});toast("ورود موفق بود","ok");}
- catch(e){toast("رمز اشتباه است","err")}finally{btn.disabled=false;btn.textContent="ورود"}
+:root{
+--bg:#0b0a09;
+--text:#fff6ea;
+--muted:#c3b09a;
+--line:rgba(255,186,92,.22);
+--gold:#ffb43a;
+--mint:#3ee39a;
+--ink:#140f0a
 }
-function askLogout(){if(!confirm("از حساب خارج شوید؟"))return;logout()}
-function cancelLogout(){toast("حساب شما همچنان وارد است")}
-function logout(){localStorage.removeItem(AUTH_KEY);localStorage.removeItem(KEYS.dash);localStorage.removeItem(KEYS.radio);current=null;items=[];document.getElementById("tokens").classList.add("hidden");document.getElementById("tokens").innerHTML="";document.getElementById("sessionCard").classList.add("hidden");document.getElementById("loginCard").classList.remove("hidden");document.getElementById("pass").value="";toast("خارج شدی")}
-function showTokens(){if(!current?.admin)return;const box=document.getElementById("tokens");box.classList.remove("hidden");box.innerHTML=items.length?items.map(x=>'<div><b>'+String(x.name||"توکن")+'</b><div class="token">'+String(x.token||"")+'</div></div>').join(""):"<p class='muted'>توکنی پیدا نشد.</p>"}
-(async()=>{const a=getAuth();if(a?.loggedIn)showSession(a)})();
-document.getElementById("pass").addEventListener("keydown",e=>{if(e.key==="Enter")unlock()});
+
+*{box-sizing:border-box}
+
+body{
+margin:0;
+min-height:100vh;
+font-family:Lalezar,Tahoma;
+color:var(--text);
+background:
+radial-gradient(circle at 12% 0%,rgba(255,180,58,.23),transparent 32%),
+radial-gradient(circle at 88% 30%,rgba(62,227,154,.11),transparent 30%),
+linear-gradient(180deg,#120e0b,#070605)
+}
+
+.wrap{
+width:min(720px,calc(100% - 30px));
+margin:auto;
+padding:55px 0
+}
+
+.card{
+padding:22px;
+border-radius:22px;
+border:1px solid var(--line);
+background:
+linear-gradient(
+145deg,
+rgba(255,255,255,.095),
+rgba(255,180,58,.065),
+rgba(255,255,255,.025)
+);
+backdrop-filter:blur(20px);
+-webkit-backdrop-filter:blur(20px);
+box-shadow:
+0 28px 70px rgba(0,0,0,.55),
+inset 0 1px 0 rgba(255,255,255,.08);
+text-align:center
+}
+
+.gold{color:var(--gold)}
+
+input{
+width:100%;
+padding:11px;
+border-radius:12px;
+border:1px solid var(--line);
+background:rgba(255,255,255,.055);
+backdrop-filter:blur(10px);
+color:var(--text);
+font:16px Lalezar;
+outline:none
+}
+
+.btn{
+border:0;
+cursor:pointer;
+border-radius:16px;
+padding:12px 18px;
+font:16px Lalezar;
+margin:5px;
+box-shadow:0 5px 0 rgba(0,0,0,.3)
+}
+
+.goldbtn{
+background:linear-gradient(180deg,#ffd27a,#ff9d1f);
+color:var(--ink)
+}
+
+.mint{
+background:linear-gradient(180deg,#6af3b8,#17c77a);
+color:#042016
+}
+
+.ghost{
+background:rgba(255,255,255,.06);
+color:var(--text);
+border:1px solid var(--line);
+box-shadow:none
+}
+
+.rose{
+background:linear-gradient(180deg,#ff8a97,#e23b4d);
+color:#fff
+}
+
+.hidden{
+display:none!important
+}
+
+.muted{
+color:var(--muted)
+}
+
+.status{
+margin:14px 0;
+color:var(--muted);
+min-height:28px
+}
+
+.token{
+direction:ltr;
+text-align:left;
+word-break:break-all;
+padding:10px;
+border-radius:11px;
+background:rgba(255,255,255,.045);
+backdrop-filter:blur(10px);
+margin:8px 0;
+border:1px solid rgba(255,186,92,.10)
+}
+
+.spinner{
+display:inline-block;
+width:16px;
+height:16px;
+border:2px solid rgba(0,0,0,.25);
+border-top-color:#111;
+border-radius:50%;
+animation:spin .7s linear infinite;
+vertical-align:-3px
+}
+
+@keyframes spin{
+to{transform:rotate(360deg)}
+}
+
+.actions{
+display:flex;
+justify-content:center;
+flex-wrap:wrap
+}
+
+.toast{
+position:fixed;
+bottom:20px;
+left:50%;
+transform:translate(-50%,22px) scale(.96);
+padding:12px 18px;
+border-radius:12px;
+background:rgba(23,18,13,.68);
+backdrop-filter:blur(18px);
+-webkit-backdrop-filter:blur(18px);
+border:1px solid var(--line);
+box-shadow:0 18px 45px rgba(0,0,0,.35);
+z-index:5;
+opacity:0;
+animation:toastIn .55s cubic-bezier(.22,1,.36,1) forwards
+}
+
+.toast.hide{
+animation:toastOut .55s cubic-bezier(.55,0,.78,.18) forwards
+}
+
+@keyframes toastIn{
+to{
+opacity:1;
+transform:translate(-50%,0) scale(1)
+}
+}
+
+@keyframes toastOut{
+to{
+opacity:0;
+transform:translate(-50%,18px) scale(.94)
+}
+}
+
+.ok{color:#9dffc9}
+.err{color:#ffb0b7}
+
+button,a,input{
+transition:
+transform .5s cubic-bezier(.22,1,.36,1),
+opacity .5s ease,
+border-color .5s ease,
+box-shadow .5s ease,
+background .5s ease
+}
+
+button:not(:disabled):hover,
+a.btn:hover{
+transform:translateY(-3px)
+}
+
+button:disabled{
+opacity:.55;
+cursor:wait
+}
+
+.bi{
+display:inline-block;
+vertical-align:-.12em;
+margin-inline-end:6px
+}
+
+/* Custom Alert / Confirm */
+
+.custom-dialog{
+position:fixed;
+inset:0;
+background:rgba(8,6,4,.68);
+backdrop-filter:blur(18px);
+-webkit-backdrop-filter:blur(18px);
+display:flex;
+align-items:center;
+justify-content:center;
+z-index:150;
+animation:dialogIn .35s cubic-bezier(.22,1,.36,1)
+}
+
+.custom-dialog.hidden{
+display:none
+}
+
+.custom-dialog.closing{
+animation:dialogOut .3s cubic-bezier(.55,0,.78,.18) forwards
+}
+
+.custom-dialog-box{
+width:min(500px,calc(100% - 30px));
+padding:21px;
+border-radius:20px;
+border:1px solid var(--line);
+background:rgba(22,17,12,.78);
+backdrop-filter:blur(22px);
+-webkit-backdrop-filter:blur(22px);
+box-shadow:
+0 28px 80px rgba(0,0,0,.55),
+inset 0 1px 0 rgba(255,255,255,.08);
+animation:dialogBoxIn .4s cubic-bezier(.22,1,.36,1)
+}
+
+.custom-dialog.closing .custom-dialog-box{
+animation:dialogBoxOut .3s cubic-bezier(.55,0,.78,.18) forwards
+}
+
+.dialog-title{
+margin:0 0 8px;
+font-size:23px
+}
+
+.dialog-message{
+color:var(--muted);
+line-height:1.9;
+white-space:pre-wrap
+}
+
+.dialog-icon{
+font-size:25px;
+vertical-align:-.12em;
+margin-inline-end:7px
+}
+
+.dialog-actions{
+display:flex;
+gap:6px;
+flex-wrap:wrap;
+margin-top:17px
+}
+
+@keyframes dialogIn{
+from{opacity:0}
+to{opacity:1}
+}
+
+@keyframes dialogOut{
+from{opacity:1}
+to{opacity:0}
+}
+
+@keyframes dialogBoxIn{
+from{
+opacity:0;
+transform:translateY(18px) scale(.96)
+}
+to{
+opacity:1;
+transform:none
+}
+}
+
+@keyframes dialogBoxOut{
+to{
+opacity:0;
+transform:translateY(16px) scale(.96)
+}
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+
+<div id="loginCard" class="card">
+
+<!-- Brand intentionally has NO icon -->
+<h1>
+<span class="gold">H</span>Panel Vault
+</h1>
+
+<p class="muted">رمز گاوصندوق را وارد کنید</p>
+
+<input
+id="pass"
+type="password"
+placeholder="رمز ورود"
+autocomplete="current-password"
+>
+
+<button id="login" class="btn goldbtn" onclick="unlock()">
+<i class="bi bi-unlock"></i>
+ورود
+</button>
+
+<p id="status" class="status"></p>
+
+</div>
+
+
+<div id="sessionCard" class="card hidden">
+
+<!-- Brand intentionally has NO icon -->
+<h1>
+<span class="gold">H</span>Panel Vault
+</h1>
+
+<p id="sessionText" class="muted"></p>
+
+<div class="actions">
+
+<button class="btn rose" onclick="askLogout()">
+<i class="bi bi-box-arrow-right"></i>
+بله، خروج
+</button>
+
+<button class="btn ghost" onclick="cancelLogout()">
+<i class="bi bi-x-lg"></i>
+خیر
+</button>
+
+<button
+id="viewBtn"
+class="btn goldbtn hidden"
+onclick="showTokens()"
+>
+<i class="bi bi-key"></i>
+مشاهده توکن‌ها
+</button>
+
+</div>
+
+<div id="tokens" class="hidden"></div>
+
+<br>
+
+<a
+class="btn mint"
+href="https://herculepanel.github.io/"
+>
+<i class="bi bi-house"></i>
+منوی اصلی
+</a>
+
+</div>
+
+</div>
+
+
+<!-- Custom Alert / Confirm -->
+
+<div id="customDialog" class="custom-dialog hidden">
+
+<div class="custom-dialog-box">
+
+<h2 id="dialogTitle" class="dialog-title"></h2>
+
+<div id="dialogMessage" class="dialog-message"></div>
+
+<div id="dialogActions" class="dialog-actions"></div>
+
+</div>
+
+</div>
+
+
+<script>
+
+const CONFIG={
+vaultFile:"vault.enc.json"
+};
+
+const AUTH_KEY="hpanel_auth";
+
+const KEYS={
+dash:"hpanel_dashboard_token",
+radio:"hpanel_radio_token"
+};
+
+let current=null;
+let items=[];
+let password="";
+
+
+/* ---------------- Toast ---------------- */
+
+function toast(t,c=""){
+
+const x=document.createElement("div");
+
+x.className="toast "+c;
+
+x.textContent=t;
+
+document.body.appendChild(x);
+
+setTimeout(()=>{
+
+x.classList.add("hide");
+
+setTimeout(()=>{
+x.remove()
+},550);
+
+},3200);
+
+}
+
+
+/* ---------------- Custom Dialog ---------------- */
+
+function closeCustomDialog(){
+
+const d=document.getElementById("customDialog");
+
+if(d.classList.contains("hidden"))return;
+
+d.classList.add("closing");
+
+setTimeout(()=>{
+
+d.classList.add("hidden");
+d.classList.remove("closing");
+
+},300);
+
+}
+
+
+function customAlert(
+message,
+title="پیام",
+type="info"
+){
+
+return new Promise(resolve=>{
+
+const d=document.getElementById("customDialog");
+const t=document.getElementById("dialogTitle");
+const m=document.getElementById("dialogMessage");
+const a=document.getElementById("dialogActions");
+
+const icons={
+info:"bi-info-circle",
+success:"bi-check-circle",
+error:"bi-exclamation-triangle",
+warning:"bi-exclamation-triangle"
+};
+
+const buttonClass=
+type==="error"||type==="warning"
+?"rose"
+:"mint";
+
+t.innerHTML=
+`<i class="bi ${icons[type]||icons.info} dialog-icon"></i>${esc(title)}`;
+
+m.textContent=message;
+
+a.innerHTML=`
+
+<button
+class="btn ${buttonClass}"
+id="dialogOK"
+>
+<i class="bi bi-check-lg"></i>
+باشه
+</button>
+
+`;
+
+d.classList.remove("hidden","closing");
+
+document.getElementById("dialogOK").onclick=()=>{
+
+closeCustomDialog();
+
+setTimeout(()=>{
+resolve();
+},300);
+
+};
+
+});
+
+}
+
+
+function customConfirm(
+message,
+title="تأیید"
+){
+
+return new Promise(resolve=>{
+
+const d=document.getElementById("customDialog");
+const t=document.getElementById("dialogTitle");
+const m=document.getElementById("dialogMessage");
+const a=document.getElementById("dialogActions");
+
+t.innerHTML=
+`<i class="bi bi-question-circle dialog-icon"></i>${esc(title)}`;
+
+m.textContent=message;
+
+a.innerHTML=`
+
+<button
+class="btn mint"
+id="dialogYes"
+>
+<i class="bi bi-check-lg"></i>
+بله
+</button>
+
+<button
+class="btn ghost"
+id="dialogNo"
+>
+<i class="bi bi-x-lg"></i>
+خیر
+</button>
+
+`;
+
+d.classList.remove("hidden","closing");
+
+
+document.getElementById("dialogYes").onclick=()=>{
+
+closeCustomDialog();
+
+setTimeout(()=>{
+resolve(true);
+},300);
+
+};
+
+
+document.getElementById("dialogNo").onclick=()=>{
+
+closeCustomDialog();
+
+setTimeout(()=>{
+resolve(false);
+},300);
+
+};
+
+});
+
+}
+
+
+/* ---------------- Encryption ---------------- */
+
+function b64(s){
+
+const bin=atob(s);
+
+const a=new Uint8Array(bin.length);
+
+for(let i=0;i<bin.length;i++)
+a[i]=bin.charCodeAt(i);
+
+return a;
+
+}
+
+
+async function keyFor(p,salt){
+
+const m=
+await crypto.subtle.importKey(
+"raw",
+new TextEncoder().encode(p),
+"PBKDF2",
+false,
+["deriveBits"]
+);
+
+const bits=
+await crypto.subtle.deriveBits(
+{
+name:"PBKDF2",
+salt,
+iterations:100000,
+hash:"SHA-256"
+},
+m,
+256
+);
+
+return new Uint8Array(bits);
+
+}
+
+
+async function decrypt(p,pack){
+
+const k=
+await keyFor(
+p,
+b64(pack.salt)
+);
+
+const b=
+b64(pack.blob);
+
+const raw=
+new Uint8Array(b.length);
+
+for(let i=0;i<b.length;i++)
+raw[i]=b[i]^k[i%32];
+
+return JSON.parse(
+new TextDecoder().decode(raw)
+);
+
+}
+
+
+async function loadPack(){
+
+const r=
+await fetch(
+CONFIG.vaultFile+"?t="+Date.now(),
+{
+cache:"no-store"
+}
+);
+
+if(!r.ok)
+throw Error("فایل Vault پیدا نشد");
+
+return r.json();
+
+}
+
+
+/* ---------------- Auth ---------------- */
+
+function saveAuth(admin,data){
+
+localStorage.setItem(
+AUTH_KEY,
+JSON.stringify({
+loggedIn:true,
+admin:!!admin,
+at:Date.now()
+})
+);
+
+if(data?.items){
+
+for(const x of data.items){
+
+if(!x||!x.token)continue;
+
+const n=
+String(x.name||"").toLowerCase();
+
+if(n.includes("radio"))
+localStorage.setItem(
+KEYS.radio,
+x.token
+);
+
+else if(n.includes("dash"))
+localStorage.setItem(
+KEYS.dash,
+x.token
+);
+
+}
+
+}
+
+}
+
+
+function getAuth(){
+
+try{
+
+return JSON.parse(
+localStorage.getItem(
+AUTH_KEY
+)||"null"
+);
+
+}catch{
+
+return null;
+
+}
+
+}
+
+
+/* ---------------- Session ---------------- */
+
+function showSession(a){
+
+current=a;
+
+document
+.getElementById("loginCard")
+.classList.add("hidden");
+
+document
+.getElementById("sessionCard")
+.classList.remove("hidden");
+
+document
+.getElementById("sessionText")
+.textContent=
+a.admin
+?"شما به عنوان مدیر وارد شده‌اید. از حساب خارج شوید؟"
+:"شما وارد شده‌اید. از حساب خارج شوید؟";
+
+document
+.getElementById("viewBtn")
+.classList
+.toggle(
+"hidden",
+!a.admin
+);
+
+}
+
+
+/* ---------------- Login ---------------- */
+
+async function unlock(){
+
+const entered=
+document
+.getElementById("pass")
+.value
+.trim();
+
+if(!entered){
+
+toast(
+"رمز را وارد کن",
+"err"
+);
+
+return;
+
+}
+
+const admin=
+entered.endsWith("_thisisadmin");
+
+const base=
+admin
+?entered.slice(
+0,
+-"_thisisadmin".length
+)
+:entered;
+
+const btn=
+document.getElementById("login");
+
+btn.disabled=true;
+
+btn.innerHTML=
+`<i class="bi bi-hourglass-split"></i>در حال بررسی <span class="spinner"></span>`;
+
+
+try{
+
+const pack=
+await loadPack();
+
+const data=
+await decrypt(
+base,
+pack
+);
+
+items=
+Array.isArray(data.items)
+?data.items
+:[];
+
+saveAuth(
+admin,
+data
+);
+
+showSession({
+admin
+});
+
+toast(
+"ورود موفق بود",
+"ok"
+);
+
+}catch(e){
+
+toast(
+"رمز اشتباه است",
+"err"
+);
+
+}finally{
+
+btn.disabled=false;
+
+btn.innerHTML=
+`<i class="bi bi-unlock"></i>ورود`;
+
+}
+
+}
+
+
+/* ---------------- Logout ---------------- */
+
+async function askLogout(){
+
+const confirmed=
+await customConfirm(
+"از حساب خارج شوید؟",
+"خروج از حساب"
+);
+
+if(!confirmed)return;
+
+logout();
+
+}
+
+
+function cancelLogout(){
+
+toast(
+"حساب شما همچنان وارد است"
+);
+
+}
+
+
+function logout(){
+
+localStorage.removeItem(
+AUTH_KEY
+);
+
+localStorage.removeItem(
+KEYS.dash
+);
+
+localStorage.removeItem(
+KEYS.radio
+);
+
+current=null;
+items=[];
+
+document
+.getElementById("tokens")
+.classList
+.add("hidden");
+
+document
+.getElementById("tokens")
+.innerHTML="";
+
+document
+.getElementById("sessionCard")
+.classList
+.add("hidden");
+
+document
+.getElementById("loginCard")
+.classList
+.remove("hidden");
+
+document
+.getElementById("pass")
+.value="";
+
+toast(
+"خارج شدی",
+"ok"
+);
+
+}
+
+
+/* ---------------- Token Viewer ---------------- */
+
+function showTokens(){
+
+if(!current?.admin)return;
+
+const box=
+document.getElementById("tokens");
+
+box.classList.remove("hidden");
+
+box.innerHTML=
+items.length
+
+?items.map(x=>`
+
+<div>
+
+<b>
+<i class="bi bi-key-fill"></i>
+${esc(x.name||"توکن")}
+</b>
+
+<div class="token">
+${esc(x.token||"")}
+</div>
+
+</div>
+
+`).join("")
+
+:`
+
+<p class="muted">
+<i class="bi bi-info-circle"></i>
+توکنی پیدا نشد.
+</p>
+
+`;
+
+}
+
+
+/* ---------------- Escape ---------------- */
+
+function esc(s){
+
+return String(s??"")
+.replaceAll("&","&amp;")
+.replaceAll("<","&lt;")
+.replaceAll(">","&gt;")
+.replaceAll('"',"&quot;")
+.replaceAll("'","&#039;");
+
+}
+
+
+/* ---------------- Startup ---------------- */
+
+(async()=>{
+
+const a=getAuth();
+
+if(a?.loggedIn)
+showSession(a);
+
+})();
+
+
+document
+.getElementById("pass")
+.addEventListener(
+"keydown",
+e=>{
+
+if(e.key==="Enter")
+unlock();
+
+}
+);
+
 </script>
-</body></html>
+
+</body>
+ </html>
