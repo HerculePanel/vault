@@ -107,4 +107,5 @@ jobs:
             exit 0
 
           git commit -m "Update encrypted vault file"
+
           git push
