@@ -27,7 +27,7 @@ box-sizing:border-box
 
 html,body{
 margin:0;
-min-height:100%
+min-height:100%;
 }
 
 body{
@@ -35,6 +35,7 @@ min-height:100vh;
 font-family:Lalezar,Tahoma,sans-serif;
 font-size:13px;
 color:var(--text);
+
 background:
 radial-gradient(
 circle at 12% 0%,
@@ -51,6 +52,13 @@ linear-gradient(
 #120e0b,
 #070605
 );
+
+/* Center the whole HPanel Vault interface */
+display:flex;
+align-items:center;
+justify-content:center;
+
+padding:12px;
 }
 
 /* =========================
@@ -58,9 +66,15 @@ linear-gradient(
 ========================= */
 
 .wrap{
-width:min(560px,calc(100% - 24px));
-margin:auto;
-padding:20px 0 12px;
+width:min(560px,100%);
+
+margin:0;
+padding:0;
+
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:stretch;
 }
 
 /* =========================
@@ -635,9 +649,12 @@ margin-inline-end:4px;
 
 @media(max-width:600px){
 
+body{
+padding:10px;
+}
+
 .wrap{
-width:calc(100% - 20px);
-padding:12px 0 8px;
+width:100%;
 }
 
 .card{
@@ -699,7 +716,7 @@ font-size:9px;
 <div id="loginCard" class="card">
 
 <h1>
-<span class="gold">H</span>Panel Vault
+<span class="gold">H</span><span class="gold">P</span>anel Vault
 </h1>
 
 <p class="muted">
@@ -732,7 +749,7 @@ onclick="unlock()"
 <div id="sessionCard" class="card hidden">
 
 <h1>
-<span class="gold">H</span>Panel Vault
+<span class="gold">H</span><span class="gold">P</span>anel Vault
 </h1>
 
 <p id="sessionText" class="muted"></p>
@@ -913,7 +930,7 @@ href="https://herculepanel.github.io/"
 
 <div class="footer-brand">
 
-<span class="gold">H</span>Panel Vault
+<span class="gold">H</span><span class="gold">P</span>anel Vault
 
 <span class="footer-dot"></span>
 
@@ -924,7 +941,8 @@ href="https://herculepanel.github.io/"
 <div>
 ساخته شده با
 <span class="gold">♥</span>
-برای اکوسیستم HPanel
+برای اکوسیستم
+<span class="gold">H</span><span class="gold">P</span>anel
 </div>
 
 <div>
@@ -933,7 +951,7 @@ href="https://herculepanel.github.io/"
 class="footer-link"
 href="https://herculepanel.github.io/"
 >
-HerculePanel
+<span class="gold">H</span>ercule<span class="gold">P</span>anel
 </a>
 
 <span class="footer-dot"></span>
