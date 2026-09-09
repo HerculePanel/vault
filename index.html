@@ -9,2460 +9,519 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lalezar&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-
 <link rel="stylesheet" href="https://herculepanel.github.io/main.css">
 
 <style>
-*{
-box-sizing:border-box
-}
-
-html,body{
-margin:0;
-min-height:100%;
-}
-
+*{ box-sizing:border-box }
+html,body{ margin:0; min-height:100%; }
 body{
-min-height:100vh;
-font-family:Lalezar,Tahoma,sans-serif;
-font-size:13px;
-color:var(--text);
-
-background:
-radial-gradient(
-circle at 12% 0%,
-rgba(255,180,58,.19),
-transparent 30%
-),
-radial-gradient(
-circle at 88% 30%,
-rgba(62,227,154,.09),
-transparent 28%
-),
-linear-gradient(
-180deg,
-#120e0b,
-#070605
-);
-
-/* Center the whole HPanel Vault interface */
-display:flex;
-align-items:center;
-justify-content:center;
-
-padding:12px;
+  min-height:100vh;
+  font-size:clamp(15px, 2.4vw, 18px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:clamp(12px, 3vw, 28px);
 }
-
-/* =========================
-   MAIN WRAPPER
-========================= */
-
 .wrap{
-width:min(560px,100%);
-
-margin:0;
-padding:0;
-
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:stretch;
+  width:min(720px, 100%);
+  max-width:100%;
+  margin:0;
+  padding:0;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:stretch;
 }
-
-/* =========================
-   CARD
-========================= */
-
 .card{
-padding:14px;
-border-radius:17px;
-border:1px solid var(--line);
-
-background:
-linear-gradient(
-145deg,
-rgba(255,255,255,.075),
-rgba(255,180,58,.055),
-rgba(255,255,255,.018)
-);
-
-backdrop-filter:blur(18px);
--webkit-backdrop-filter:blur(18px);
-
-box-shadow:
-0 18px 45px rgba(0,0,0,.48),
-inset 0 1px 0 rgba(255,255,255,.07);
-
-text-align:center;
+  padding:clamp(16px, 3.2vw, 28px);
+  border-radius:20px;
+  border:1px solid var(--line);
+  background:linear-gradient(145deg,rgba(255,255,255,.075),rgba(255,180,58,.055),rgba(255,255,255,.018));
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+  box-shadow:0 18px 45px rgba(0,0,0,.48), inset 0 1px 0 rgba(255,255,255,.07);
+  text-align:center;
 }
-
-/* =========================
-   TEXT
-========================= */
-
-h1{
-margin:2px 0 3px;
-font-size:23px;
-line-height:1.1;
-}
-
-h2{
-margin:5px 0;
-font-size:17px;
-}
-
-p{
-margin:5px 0;
-}
-
-.gold{
-color:var(--gold)
-}
-
-.muted{
-color:var(--muted);
-font-size:11px;
-}
-
-/* =========================
-   INPUT
-========================= */
-
+h1{ margin:2px 0 6px; font-size:clamp(26px, 6vw, 36px); line-height:1.15; }
+h2{ margin:8px 0; font-size:clamp(17px, 3.4vw, 22px); }
+p{ margin:5px 0; }
+.gold{ color:var(--gold) }
+.muted{ color:var(--muted); font-size:clamp(13px, 2.2vw, 16px); }
 input{
-width:100%;
-height:34px;
-padding:6px 9px;
-
-border-radius:9px;
-border:1px solid var(--line);
-
-background:rgba(255,255,255,.045);
-
-backdrop-filter:blur(8px);
-
-color:var(--text);
-font:13px Lalezar,Tahoma;
-outline:none;
+  width:100%;
+  min-height:48px;
+  height:auto;
+  padding:10px 14px;
+  border-radius:12px;
+  font-size:clamp(15px, 2.4vw, 17px);
 }
-
-input:focus{
-border-color:rgba(255,180,58,.48);
-box-shadow:0 0 0 2px rgba(255,180,58,.06);
-}
-
-/* =========================
-   BUTTONS
-========================= */
-
-.btn{
-border:0;
-cursor:pointer;
-
-border-radius:11px;
-
-padding:7px 11px;
-margin:3px;
-
-font:12px Lalezar,Tahoma;
-
-box-shadow:
-0 3px 0 rgba(0,0,0,.28);
-}
-
-.goldbtn{
-background:
-linear-gradient(
-180deg,
-#ffd27a,
-#ff9d1f
-);
-
-color:var(--ink);
-}
-
-.mint{
-background:
-linear-gradient(
-180deg,
-#6af3b8,
-#17c77a
-);
-
-color:#042016;
-}
-
-.ghost{
-background:rgba(255,255,255,.045);
-color:var(--text);
-
-border:1px solid var(--line);
-
-box-shadow:none;
-}
-
-.rose{
-background:
-linear-gradient(
-180deg,
-#ff8a97,
-#e23b4d
-);
-
-color:#fff;
-}
-
-.hidden{
-display:none!important
-}
-
-.actions{
-display:flex;
-justify-content:center;
-align-items:center;
-flex-wrap:wrap;
-gap:1px;
-}
-
-/* =========================
-   STATUS
-========================= */
-
-.status{
-margin:7px 0;
-min-height:18px;
-color:var(--muted);
-font-size:11px;
-}
-
-.ok{
-color:#9dffc9
-}
-
-.err{
-color:#ffb0b7
-}
-
-/* =========================
-   TOKEN BOX
-========================= */
-
+input:focus{ border-color:rgba(255,180,58,.48); box-shadow:0 0 0 2px rgba(255,180,58,.06); }
+.btn{ border-radius:14px; padding:10px 16px; margin:4px; font-size:clamp(14px, 2.3vw, 17px); }
+.goldbtn{ background:linear-gradient(180deg,#ffd27a,#ff9d1f); color:var(--ink); }
+.mint{ background:linear-gradient(180deg,#6af3b8,#17c77a); color:#042016; }
+.ghost{ background:rgba(255,255,255,.045); color:var(--text); border:1px solid var(--line); box-shadow:none; }
+.rose{ background:linear-gradient(180deg,#ff8a97,#e23b4d); color:#fff; }
+.hidden{ display:none!important }
+.actions{ display:flex; justify-content:center; align-items:center; flex-wrap:wrap; gap:1px; }
+.status{ margin:8px 0; min-height:22px; color:var(--muted); font-size:clamp(13px, 2.1vw, 15px); }
+.ok{ color:#9dffc9 }
+.err{ color:#ffb0b7 }
 .token{
-direction:ltr;
-text-align:left;
-
-word-break:break-all;
-
-padding:7px 8px;
-
-border-radius:8px;
-
-background:rgba(255,255,255,.035);
-
-backdrop-filter:blur(8px);
-
-margin:5px 0;
-
-border:1px solid rgba(255,186,92,.08);
-
-font:9px monospace;
+  direction:ltr; text-align:left; word-break:break-all;
+  padding:7px 8px; border-radius:8px;
+  background:rgba(255,255,255,.035); backdrop-filter:blur(8px);
+  margin:5px 0; border:1px solid rgba(255,186,92,.08); font:12px monospace;
 }
-
-/* =========================
-   SECRET EDITOR
-========================= */
-
-.secret-editor{
-margin-top:9px;
-padding-top:9px;
-
-border-top:1px solid var(--line);
-
-text-align:right;
-}
-
-.secret-editor h2{
-text-align:center;
-}
-
-.secret-row{
-display:flex;
-align-items:center;
-gap:6px;
-
-margin:5px 0;
-}
-
-.secret-name{
-width:130px;
-flex-shrink:0;
-
-direction:ltr;
-text-align:left;
-
-font-size:10px;
-color:var(--muted);
-}
-
-.secret-row input{
-height:30px;
-font-size:11px;
-}
-
-/* =========================
-   SPINNER
-========================= */
-
+.secret-editor{ margin-top:9px; padding-top:9px; border-top:1px solid var(--line); text-align:right; }
+.secret-editor h2{ text-align:center; }
+.secret-row{ display:flex; align-items:center; gap:6px; margin:5px 0; }
+.secret-name{ width:130px; flex-shrink:0; direction:ltr; text-align:left; font-size:12px; color:var(--muted); }
+.secret-row input{ min-height:42px; font-size:14px; }
 .spinner{
-display:inline-block;
-
-width:12px;
-height:12px;
-
-border:2px solid rgba(0,0,0,.22);
-border-top-color:#111;
-
-border-radius:50%;
-
-animation:spin .7s linear infinite;
-
-vertical-align:-2px;
+  display:inline-block; width:12px; height:12px;
+  border:2px solid rgba(0,0,0,.22); border-top-color:#111;
+  border-radius:50%; animation:spin .7s linear infinite; vertical-align:-2px;
 }
-
-@keyframes spin{
-to{
-transform:rotate(360deg)
-}
-}
-
-/* =========================
-   TOAST
-========================= */
-
+@keyframes spin{ to{ transform:rotate(360deg) } }
 .toast{
-position:fixed;
-
-bottom:15px;
-left:50%;
-
-transform:
-translate(-50%,20px)
-scale(.96);
-
-padding:8px 13px;
-
-border-radius:10px;
-
-background:rgba(23,18,13,.72);
-
-backdrop-filter:blur(16px);
--webkit-backdrop-filter:blur(16px);
-
-border:1px solid var(--line);
-
-box-shadow:
-0 12px 35px rgba(0,0,0,.32);
-
-z-index:50;
-
-opacity:0;
-
-font-size:11px;
-
-animation:
-toastIn .45s cubic-bezier(.22,1,.36,1)
-forwards;
+  position:fixed; bottom:15px; left:50%;
+  transform:translate(-50%,20px) scale(.96);
+  padding:8px 13px; border-radius:10px;
+  background:rgba(23,18,13,.72);
+  backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+  border:1px solid var(--line); box-shadow:0 12px 35px rgba(0,0,0,.32);
+  z-index:50; opacity:0; font-size:11px;
+  animation:toastIn .45s cubic-bezier(.22,1,.36,1) forwards;
 }
-
-.toast.hide{
-animation:
-toastOut .4s cubic-bezier(.55,0,.78,.18)
-forwards;
-}
-
-@keyframes toastIn{
-to{
-opacity:1;
-transform:
-translate(-50%,0)
-scale(1)
-}
-}
-
-@keyframes toastOut{
-to{
-opacity:0;
-transform:
-translate(-50%,14px)
-scale(.94)
-}
-}
-
-/* =========================
-   DIALOG
-========================= */
-
+.toast.hide{ animation:toastOut .4s cubic-bezier(.55,0,.78,.18) forwards; }
+@keyframes toastIn{ to{ opacity:1; transform:translate(-50%,0) scale(1) } }
+@keyframes toastOut{ to{ opacity:0; transform:translate(-50%,14px) scale(.94) } }
 .custom-dialog{
-position:fixed;
-inset:0;
-
-background:rgba(8,6,4,.68);
-
-backdrop-filter:blur(15px);
--webkit-backdrop-filter:blur(15px);
-
-display:flex;
-align-items:center;
-justify-content:center;
-
-z-index:150;
-
-animation:
-dialogIn .3s
-cubic-bezier(.22,1,.36,1);
+  position:fixed; inset:0; background:rgba(8,6,4,.68);
+  backdrop-filter:blur(15px); -webkit-backdrop-filter:blur(15px);
+  display:flex; align-items:center; justify-content:center; z-index:150;
+  animation:dialogIn .3s cubic-bezier(.22,1,.36,1);
 }
-
-.custom-dialog.hidden{
-display:none
-}
-
-.custom-dialog.closing{
-animation:
-dialogOut .25s
-cubic-bezier(.55,0,.78,.18)
-forwards;
-}
-
+.custom-dialog.hidden{ display:none }
+.custom-dialog.closing{ animation:dialogOut .25s cubic-bezier(.55,0,.78,.18) forwards; }
 .custom-dialog-box{
-width:min(430px,calc(100% - 26px));
-
-padding:15px;
-
-border-radius:16px;
-
-border:1px solid var(--line);
-
-background:rgba(22,17,12,.80);
-
-backdrop-filter:blur(20px);
--webkit-backdrop-filter:blur(20px);
-
-box-shadow:
-0 22px 55px rgba(0,0,0,.48),
-inset 0 1px 0 rgba(255,255,255,.07);
-
-animation:
-dialogBoxIn .35s
-cubic-bezier(.22,1,.36,1);
+  width:min(430px,calc(100% - 26px)); padding:15px; border-radius:16px;
+  border:1px solid var(--line); background:rgba(22,17,12,.80);
+  backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+  box-shadow:0 22px 55px rgba(0,0,0,.48), inset 0 1px 0 rgba(255,255,255,.07);
+  animation:dialogBoxIn .35s cubic-bezier(.22,1,.36,1);
 }
-
-.custom-dialog.closing .custom-dialog-box{
-animation:
-dialogBoxOut .25s
-cubic-bezier(.55,0,.78,.18)
-forwards;
-}
-
-.dialog-title{
-margin:0 0 5px;
-font-size:18px;
-}
-
-.dialog-message{
-color:var(--muted);
-
-line-height:1.7;
-
-font-size:11px;
-
-white-space:pre-wrap;
-}
-
-.dialog-icon{
-font-size:19px;
-
-vertical-align:-.12em;
-
-margin-inline-end:5px;
-}
-
-.dialog-actions{
-display:flex;
-
-gap:3px;
-
-flex-wrap:wrap;
-
-margin-top:9px;
-}
-
-@keyframes dialogIn{
-from{
-opacity:0
-}
-to{
-opacity:1
-}
-}
-
-@keyframes dialogOut{
-from{
-opacity:1
-}
-to{
-opacity:0
-}
-}
-
-@keyframes dialogBoxIn{
-from{
-opacity:0;
-transform:
-translateY(12px)
-scale(.97)
-}
-to{
-opacity:1;
-transform:none
-}
-}
-
-@keyframes dialogBoxOut{
-to{
-opacity:0;
-transform:
-translateY(10px)
-scale(.97)
-}
-}
-
-/* =========================
-   FOOTER
-========================= */
-
+.custom-dialog.closing .custom-dialog-box{ animation:dialogBoxOut .25s cubic-bezier(.55,0,.78,.18) forwards; }
+.dialog-title{ margin:0 0 5px; font-size:18px; }
+.dialog-message{ color:var(--muted); line-height:1.7; font-size:11px; white-space:pre-wrap; }
+.dialog-icon{ font-size:19px; vertical-align:-.12em; margin-inline-end:5px; }
+.dialog-actions{ display:flex; gap:3px; flex-wrap:wrap; margin-top:9px; }
+@keyframes dialogIn{ from{opacity:0} to{opacity:1} }
+@keyframes dialogOut{ from{opacity:1} to{opacity:0} }
+@keyframes dialogBoxIn{ from{opacity:0;transform:translateY(12px) scale(.97)} to{opacity:1;transform:none} }
+@keyframes dialogBoxOut{ to{opacity:0;transform:translateY(10px) scale(.97)} }
 .footer{
-margin-top:10px;
-
-padding:9px 10px;
-
-border-radius:13px;
-
-border:1px solid rgba(255,186,92,.12);
-
-background:
-linear-gradient(
-135deg,
-rgba(255,255,255,.035),
-rgba(255,180,58,.025)
-);
-
-backdrop-filter:blur(12px);
--webkit-backdrop-filter:blur(12px);
-
-text-align:center;
-
-color:#827565;
-
-font-size:10px;
-
-box-shadow:
-inset 0 1px 0 rgba(255,255,255,.035);
+  width:100%; max-width:100%; margin-top:12px;
+  padding:clamp(12px, 2.5vw, 18px);
+  font-size:clamp(12px, 2vw, 14px);
+  border-radius:13px; border:1px solid rgba(255,186,92,.12);
+  background:linear-gradient(135deg,rgba(255,255,255,.035),rgba(255,180,58,.025));
+  backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+  text-align:center; color:#827565;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.035);
 }
-
-.footer-brand{
-color:var(--muted);
-}
-
-.footer-brand .gold{
-font-size:12px;
-}
-
+.footer-brand{ color:var(--muted); }
 .footer-dot{
-display:inline-block;
-
-width:4px;
-height:4px;
-
-margin:0 5px;
-
-vertical-align:middle;
-
-border-radius:50%;
-
-background:var(--gold);
-
-box-shadow:
-0 0 8px rgba(255,180,58,.65);
+  display:inline-block; width:4px; height:4px; margin:0 5px;
+  vertical-align:middle; border-radius:50%; background:var(--gold);
+  box-shadow:0 0 8px rgba(255,180,58,.65);
 }
-
-.footer-link{
-color:var(--gold);
-text-decoration:none;
+.footer-link{ color:var(--gold); text-decoration:none; }
+.footer-link:hover{ text-shadow:0 0 10px rgba(255,180,58,.5); }
+button,a,input{
+  transition:transform .35s cubic-bezier(.22,1,.36,1), opacity .35s ease, border-color .35s ease, box-shadow .35s ease, background .35s ease;
 }
-
-.footer-link:hover{
-text-shadow:
-0 0 10px rgba(255,180,58,.5);
+button:not(:disabled):hover, a.btn:hover{ transform:translateY(-2px); }
+button:disabled{ opacity:.55; cursor:wait; }
+.bi{ display:inline-block; vertical-align:-.12em; margin-inline-end:4px; }
+.brand-title{ white-space:nowrap; }
+#tokens{
+  display:grid;
+  grid-template-rows:0fr;
+  opacity:0;
+  transform:translateY(-10px);
+  margin-top:0;
+  transition:
+    grid-template-rows .45s cubic-bezier(.22,1,.36,1),
+    opacity .35s ease,
+    transform .45s cubic-bezier(.22,1,.36,1),
+    margin-top .45s ease;
 }
-
-/* =========================
-   GENERAL ANIMATION
-========================= */
-
-button,
-a,
-input{
-transition:
-transform .35s cubic-bezier(.22,1,.36,1),
-opacity .35s ease,
-border-color .35s ease,
-box-shadow .35s ease,
-background .35s ease;
+#tokens.open{
+  grid-template-rows:1fr;
+  opacity:1;
+  transform:none;
+  margin-top:12px;
 }
-
-button:not(:disabled):hover,
-a.btn:hover{
-transform:translateY(-2px);
+#tokensInner{ overflow:hidden; min-height:0; }
+#tokensInner > div{ text-align:right; margin:8px 0; }
+@media(max-width:700px){
+  .wrap{ width:100%; }
+  .secret-row{ flex-direction:column; align-items:stretch; }
+  .secret-name{ width:100%; text-align:right; }
+  .actions{ width:100%; }
+  .actions .btn{ flex:1; }
 }
-
-button:disabled{
-opacity:.55;
-cursor:wait;
-}
-
-.bi{
-display:inline-block;
-vertical-align:-.12em;
-margin-inline-end:4px;
-}
-
-/* =========================
-   MOBILE
-========================= */
-
-@media(max-width:600px){
-
-body{
-padding:10px;
-}
-
-.wrap{
-width:100%;
-}
-
-.card{
-padding:11px;
-border-radius:15px;
-}
-
-h1{
-font-size:21px;
-}
-
-h2{
-font-size:15px;
-}
-
-.muted{
-font-size:10px;
-}
-
-input{
-height:32px;
-font-size:12px;
-}
-
-.btn{
-font-size:11px;
-padding:6px 9px;
-border-radius:10px;
-}
-
-.secret-row{
-flex-direction:column;
-align-items:stretch;
-}
-
-.secret-name{
-width:100%;
-text-align:right;
-}
-
-.secret-row input{
-height:29px;
-}
-
-.footer{
-font-size:9px;
-}
-
+@media(max-width:420px){
+  body{ padding:10px; }
+  h1{ font-size:clamp(22px, 8vw, 28px); }
 }
 </style>
 </head>
-
 <body>
-
 <div class="wrap">
 
-<!-- LOGIN CARD -->
-
 <div id="loginCard" class="card">
-
-<h1>
-<span class="gold">H</span><span class="gold">P</span>anel Vault
-</h1>
-
-<p class="muted">
-رمز گاوصندوق را وارد کنید
-</p>
-
-<input
-id="pass"
-type="password"
-placeholder="رمز ورود"
-autocomplete="current-password"
->
-
-<button
-id="login"
-class="btn goldbtn"
-onclick="unlock()"
->
-<i class="bi bi-unlock"></i>
-ورود
+<h1><span class="ltr brand-title"><span class="gold">H</span>anel<span class="gold">P</span>anel <span class="gold">V</span>ault</span></h1>
+<p class="muted">رمز گاوصندوق را وارد کنید</p>
+<input id="pass" type="password" placeholder="رمز ورود" autocomplete="current-password">
+<button id="login" class="btn goldbtn" onclick="unlock()">
+<i class="bi bi-unlock"></i> ورود
 </button>
-
 <p id="status" class="status"></p>
-
 </div>
-
-
-<!-- SESSION CARD -->
 
 <div id="sessionCard" class="card hidden">
-
-<h1>
-<span class="gold">H</span><span class="gold">P</span>anel Vault
-</h1>
-
+<h1><span class="ltr brand-title"><span class="gold">H</span>anel<span class="gold">P</span>anel <span class="gold">V</span>ault</span></h1>
 <p id="sessionText" class="muted"></p>
-
-
 <div class="actions">
-
-<button
-class="btn rose"
-onclick="askLogout()"
->
-<i class="bi bi-box-arrow-right"></i>
-بله، خروج
-</button>
-
-<button
-class="btn ghost"
-onclick="cancelLogout()"
->
-<i class="bi bi-x-lg"></i>
-خیر
-</button>
-
-
-<button
-id="viewBtn"
-class="btn goldbtn hidden"
-onclick="showTokens()"
->
-<i class="bi bi-key"></i>
-مشاهده توکن‌ها
-</button>
-
-
-<button
-id="secretBtn"
-class="btn mint hidden"
-onclick="toggleSecrets()"
->
-<i class="bi bi-pencil-square"></i>
-ویرایش Secrets
-</button>
-
-
-<button
-id="buildBtn"
-class="btn mint hidden"
-onclick="buildVault()"
->
-<i class="bi bi-play-fill"></i>
-اجرای Build Vault
-</button>
-
+<button class="btn rose" onclick="askLogout()"><i class="bi bi-box-arrow-right"></i> بله، خروج</button>
+<button class="btn ghost" onclick="cancelLogout()"><i class="bi bi-x-lg"></i> خیر</button>
+<button id="viewBtn" class="btn goldbtn hidden" onclick="showTokens()"><i class="bi bi-key"></i> مشاهده توکن‌ها</button>
+<button id="secretBtn" class="btn mint hidden" onclick="toggleSecrets()"><i class="bi bi-pencil-square"></i> ویرایش Secrets</button>
+<button id="buildBtn" class="btn mint hidden" onclick="buildVault()"><i class="bi bi-play-fill"></i> اجرای Build Vault</button>
 </div>
 
+<div id="tokens"><div id="tokensInner"></div></div>
 
-<!-- TOKENS -->
-
-<div id="tokens" class="hidden"></div>
-
-
-<!-- SECRET EDITOR -->
-
-<div
-id="secretEditor"
-class="secret-editor hidden"
->
-
-<h2>
-<span class="gold">
-مدیریت Secrets
-</span>
-</h2>
-
-<p class="muted">
-قسمت‌های خالی تغییر نمی‌کنند.
-</p>
-
-
-<div class="secret-row">
-
-<div class="secret-name">
-VAULT_PASSWORD
-</div>
-
-<input
-id="s_vault_password"
-type="password"
-placeholder="مقدار جدید"
->
-
-</div>
-
-
-<div class="secret-row">
-
-<div class="secret-name">
-DASHBOARD_TOKEN
-</div>
-
-<input
-id="s_dashboard"
-type="password"
-placeholder="مقدار جدید"
->
-
-</div>
-
-
-<div class="secret-row">
-
-<div class="secret-name">
-RADIO_TOKEN
-</div>
-
-<input
-id="s_radio"
-type="password"
-placeholder="مقدار جدید"
->
-
-</div>
-
-
-<div class="secret-row">
-
-<div class="secret-name">
-VAULT_TOKEN
-</div>
-
-<input
-id="s_vault_token"
-type="password"
-placeholder="مقدار جدید"
->
-
-</div>
-
-
+<div id="secretEditor" class="secret-editor hidden">
+<h2><span class="gold">مدیریت Secrets</span></h2>
+<p class="muted">قسمت‌های خالی تغییر نمی‌کنند.</p>
+<div class="secret-row"><div class="secret-name">VAULT_PASSWORD</div><input id="s_vault_password" type="password" placeholder="مقدار جدید"></div>
+<div class="secret-row"><div class="secret-name">DASHBOARD_TOKEN</div><input id="s_dashboard" type="password" placeholder="مقدار جدید"></div>
+<div class="secret-row"><div class="secret-name">RADIO_TOKEN</div><input id="s_radio" type="password" placeholder="مقدار جدید"></div>
+<div class="secret-row"><div class="secret-name">VAULT_TOKEN</div><input id="s_vault_token" type="password" placeholder="مقدار جدید"></div>
 <div class="actions">
-
-<button
-id="saveSecretsBtn"
-class="btn goldbtn"
-onclick="saveSecrets()"
->
-<i class="bi bi-cloud-arrow-up"></i>
-ذخیره Secrets
-</button>
-
+<button id="saveSecretsBtn" class="btn goldbtn" onclick="saveSecrets()"><i class="bi bi-cloud-arrow-up"></i> ذخیره Secrets</button>
 </div>
-
-<p
-id="secretStatus"
-class="status"
-></p>
-
+<p id="secretStatus" class="status"></p>
 </div>
-
 
 <br>
-
-
-<a
-class="btn mint"
-href="https://herculepanel.github.io/"
->
-<i class="bi bi-house"></i>
-منوی اصلی
-</a>
-
+<a class="btn mint" href="https://herculepanel.github.io/"><i class="bi bi-house"></i> منوی اصلی</a>
 </div>
-
-
-<!-- FOOTER -->
 
 <footer class="footer">
-
 <div class="footer-brand">
-
-<span class="gold">H</span><span class="gold">P</span>anel Vault
-
+<span class="ltr brand-title"><span class="gold">H</span>anel<span class="gold">P</span>anel <span class="gold">V</span>ault</span>
 <span class="footer-dot"></span>
-
 نسخه 1.3
-
 </div>
-
+<div>ساخته شده با <span class="gold">♥</span> برای اکوسیستم <span class="ltr gold">HPanel</span></div>
 <div>
-ساخته شده با
-<span class="gold">♥</span>
-برای اکوسیستم
-<span class="gold">H</span><span class="gold">P</span>anel
-</div>
-
-<div>
-
-<a
-class="footer-link"
-href="https://herculepanel.github.io/"
->
-<span class="gold">H</span>ercule<span class="gold">P</span>anel
-</a>
-
+<a class="footer-link" href="https://herculepanel.github.io/"><span class="ltr">HerculePanel</span></a>
 <span class="footer-dot"></span>
-
-<span>
-Secure • Glassy • Lightweight
-</span>
-
+<span>Secure • Glassy • Lightweight</span>
 </div>
-
 </footer>
-
 </div>
 
-
-<!-- CUSTOM DIALOG -->
-
-<div
-id="customDialog"
-class="custom-dialog hidden"
->
-
+<div id="customDialog" class="custom-dialog hidden">
 <div class="custom-dialog-box">
-
-<h2
-id="dialogTitle"
-class="dialog-title"
-></h2>
-
-<div
-id="dialogMessage"
-class="dialog-message"
-></div>
-
-<div
-id="dialogActions"
-class="dialog-actions"
-></div>
-
+<h2 id="dialogTitle" class="dialog-title"></h2>
+<div id="dialogMessage" class="dialog-message"></div>
+<div id="dialogActions" class="dialog-actions"></div>
+</div>
 </div>
 
-</div>
-
-
-<!-- LIBSODIUM -->
-
-<script
-src="https://cdn.jsdelivr.net/npm/libsodium-wrappers@0.7.15/dist/modules/libsodium-wrappers.js">
-</script>
-
-
+<script src="https://cdn.jsdelivr.net/npm/libsodium-wrappers@0.7.15/dist/modules/libsodium-wrappers.js"></script>
 <script>
-
-/* =========================================================
-   CONFIG
-========================================================= */
-
-const CONFIG={
-owner:"HerculePanel",
-repo:"vault",
-branch:"main",
-workflow:"built-vault.yml",
-vaultFile:"vault.enc.json"
-};
-
+const CONFIG={ owner:"HerculePanel", repo:"vault", branch:"main", workflow:"built-vault.yml", vaultFile:"vault.enc.json" };
 const AUTH_KEY="hpanel_auth";
 const ITEMS_KEY="hpanel_vault_items";
 const VAULT_TOKEN_KEY="hpanel_vault_token";
-
-const KEYS={
-dash:"hpanel_dashboard_token",
-radio:"hpanel_radio_token"
-};
-
-let current=null;
-let items=[];
-let apiToken="";
-
-
-/* =========================================================
-   TOAST
-========================================================= */
+const KEYS={ dash:"hpanel_dashboard_token", radio:"hpanel_radio_token" };
+let current=null, items=[], apiToken="";
 
 function toast(t,c=""){
-
-const x=document.createElement("div");
-
-x.className="toast "+c;
-x.textContent=t;
-
-document.body.appendChild(x);
-
-setTimeout(()=>{
-
-x.classList.add("hide");
-
-setTimeout(()=>{
-x.remove();
-},450);
-
-},3000);
-
+  const x=document.createElement("div");
+  x.className="toast "+c;
+  x.textContent=t;
+  document.body.appendChild(x);
+  setTimeout(()=>{ x.classList.add("hide"); setTimeout(()=>x.remove(),450); },3000);
 }
-
-
-/* =========================================================
-   CUSTOM DIALOG
-========================================================= */
-
 function closeCustomDialog(){
-
-const d=
-document.getElementById(
-"customDialog"
-);
-
-if(d.classList.contains("hidden"))
-return;
-
-d.classList.add("closing");
-
-setTimeout(()=>{
-
-d.classList.add("hidden");
-d.classList.remove("closing");
-
-},250);
-
+  const d=document.getElementById("customDialog");
+  if(d.classList.contains("hidden")) return;
+  d.classList.add("closing");
+  setTimeout(()=>{ d.classList.add("hidden"); d.classList.remove("closing"); },250);
 }
-
-
-function customAlert(
-message,
-title="پیام",
-type="info"
-){
-
-return new Promise(resolve=>{
-
-const d=
-document.getElementById(
-"customDialog"
-);
-
-const t=
-document.getElementById(
-"dialogTitle"
-);
-
-const m=
-document.getElementById(
-"dialogMessage"
-);
-
-const a=
-document.getElementById(
-"dialogActions"
-);
-
-const icons={
-info:"bi-info-circle",
-success:"bi-check-circle",
-error:"bi-exclamation-triangle",
-warning:"bi-exclamation-triangle"
-};
-
-const buttonClass=
-type==="error"||
-type==="warning"
-?"rose"
-:"mint";
-
-t.innerHTML=
-`<i class="bi ${icons[type]||icons.info} dialog-icon"></i>${esc(title)}`;
-
-m.textContent=message;
-
-a.innerHTML=`
-<button
-class="btn ${buttonClass}"
-id="dialogOK"
->
-<i class="bi bi-check-lg"></i>
-باشه
-</button>
-`;
-
-d.classList.remove(
-"hidden",
-"closing"
-);
-
-document
-.getElementById("dialogOK")
-.onclick=()=>{
-
-closeCustomDialog();
-
-setTimeout(()=>{
-resolve();
-},250);
-
-};
-
-});
-
+function customAlert(message,title="پیام",type="info"){
+  return new Promise(resolve=>{
+    const d=document.getElementById("customDialog");
+    const t=document.getElementById("dialogTitle");
+    const m=document.getElementById("dialogMessage");
+    const a=document.getElementById("dialogActions");
+    const icons={ info:"bi-info-circle", success:"bi-check-circle", error:"bi-exclamation-triangle", warning:"bi-exclamation-triangle" };
+    const buttonClass=(type==="error"||type==="warning")?"rose":"mint";
+    t.innerHTML=`<i class="bi ${icons[type]||icons.info} dialog-icon"></i>${esc(title)}`;
+    m.textContent=message;
+    a.innerHTML=`<button class="btn ${buttonClass}" id="dialogOK"><i class="bi bi-check-lg"></i>باشه</button>`;
+    d.classList.remove("hidden","closing");
+    document.getElementById("dialogOK").onclick=()=>{ closeCustomDialog(); setTimeout(()=>resolve(),250); };
+  });
 }
-
-
-function customConfirm(
-message,
-title="تأیید"
-){
-
-return new Promise(resolve=>{
-
-const d=
-document.getElementById(
-"customDialog"
-);
-
-const t=
-document.getElementById(
-"dialogTitle"
-);
-
-const m=
-document.getElementById(
-"dialogMessage"
-);
-
-const a=
-document.getElementById(
-"dialogActions"
-);
-
-t.innerHTML=
-`<i class="bi bi-question-circle dialog-icon"></i>${esc(title)}`;
-
-m.textContent=message;
-
-a.innerHTML=`
-
-<button
-class="btn mint"
-id="dialogYes"
->
-<i class="bi bi-check-lg"></i>
-بله
-</button>
-
-<button
-class="btn ghost"
-id="dialogNo"
->
-<i class="bi bi-x-lg"></i>
-خیر
-</button>
-
-`;
-
-d.classList.remove(
-"hidden",
-"closing"
-);
-
-
-document
-.getElementById("dialogYes")
-.onclick=()=>{
-
-closeCustomDialog();
-
-setTimeout(()=>{
-resolve(true);
-},250);
-
-};
-
-
-document
-.getElementById("dialogNo")
-.onclick=()=>{
-
-closeCustomDialog();
-
-setTimeout(()=>{
-resolve(false);
-},250);
-
-};
-
-});
-
+function customConfirm(message,title="تأیید"){
+  return new Promise(resolve=>{
+    const d=document.getElementById("customDialog");
+    const t=document.getElementById("dialogTitle");
+    const m=document.getElementById("dialogMessage");
+    const a=document.getElementById("dialogActions");
+    t.innerHTML=`<i class="bi bi-question-circle dialog-icon"></i>${esc(title)}`;
+    m.textContent=message;
+    a.innerHTML=`<button class="btn mint" id="dialogYes"><i class="bi bi-check-lg"></i>بله</button><button class="btn ghost" id="dialogNo"><i class="bi bi-x-lg"></i>خیر</button>`;
+    d.classList.remove("hidden","closing");
+    document.getElementById("dialogYes").onclick=()=>{ closeCustomDialog(); setTimeout(()=>resolve(true),250); };
+    document.getElementById("dialogNo").onclick=()=>{ closeCustomDialog(); setTimeout(()=>resolve(false),250); };
+  });
 }
-
-
-/* =========================================================
-   BASE64
-========================================================= */
-
 function b64(s){
-
-const bin=atob(s);
-
-const a=
-new Uint8Array(
-bin.length
-);
-
-for(
-let i=0;
-i<bin.length;
-i++
-)
-a[i]=bin.charCodeAt(i);
-
-return a;
-
+  const bin=atob(s);
+  const a=new Uint8Array(bin.length);
+  for(let i=0;i<bin.length;i++) a[i]=bin.charCodeAt(i);
+  return a;
 }
-
-
-/* =========================================================
-   KEY DERIVATION
-========================================================= */
-
-async function keyFor(
-p,
-salt
-){
-
-const m=
-await crypto.subtle.importKey(
-"raw",
-new TextEncoder().encode(p),
-"PBKDF2",
-false,
-["deriveBits"]
-);
-
-const bits=
-await crypto.subtle.deriveBits(
-{
-name:"PBKDF2",
-salt,
-iterations:100000,
-hash:"SHA-256"
-},
-m,
-256
-);
-
-return new Uint8Array(bits);
-
+async function keyFor(p,salt){
+  const m=await crypto.subtle.importKey("raw", new TextEncoder().encode(p), "PBKDF2", false, ["deriveBits"]);
+  const bits=await crypto.subtle.deriveBits({ name:"PBKDF2", salt, iterations:100000, hash:"SHA-256" }, m, 256);
+  return new Uint8Array(bits);
 }
-
-
-/* =========================================================
-   DECRYPT
-========================================================= */
-
-async function decrypt(
-p,
-pack
-){
-
-const k=
-await keyFor(
-p,
-b64(pack.salt)
-);
-
-const b=
-b64(pack.blob);
-
-const raw=
-new Uint8Array(
-b.length
-);
-
-for(
-let i=0;
-i<b.length;
-i++
-)
-raw[i]=
-b[i]^k[i%32];
-
-return JSON.parse(
-new TextDecoder().decode(raw)
-);
-
+async function decrypt(p,pack){
+  const k=await keyFor(p, b64(pack.salt));
+  const b=b64(pack.blob);
+  const raw=new Uint8Array(b.length);
+  for(let i=0;i<b.length;i++) raw[i]=b[i]^k[i%32];
+  return JSON.parse(new TextDecoder().decode(raw));
 }
-
-
-/* =========================================================
-   LOAD VAULT
-========================================================= */
-
 async function loadPack(){
-
-const r=
-await fetch(
-CONFIG.vaultFile+
-"?t="+Date.now(),
-{
-cache:"no-store"
+  const r=await fetch(CONFIG.vaultFile+"?t="+Date.now(), { cache:"no-store" });
+  if(!r.ok) throw Error("فایل Vault پیدا نشد");
+  return r.json();
 }
-);
-
-if(!r.ok)
-throw Error(
-"فایل Vault پیدا نشد"
-);
-
-return r.json();
-
+function saveAuth(admin,data){
+  localStorage.setItem(AUTH_KEY, JSON.stringify({ loggedIn:true, admin:!!admin, at:Date.now() }));
+  if(data?.items){
+    localStorage.setItem(ITEMS_KEY, JSON.stringify(data.items));
+    for(const x of data.items){
+      if(!x||!x.token) continue;
+      const n=String(x.name||"").toLowerCase();
+      if(n.includes("radio")) localStorage.setItem(KEYS.radio, x.token);
+      else if(n.includes("dash")) localStorage.setItem(KEYS.dash, x.token);
+    }
+  }
 }
-
-
-/* =========================================================
-   AUTH
-========================================================= */
-
-function saveAuth(
-admin,
-data
-){
-
-localStorage.setItem(
-AUTH_KEY,
-JSON.stringify({
-loggedIn:true,
-admin:!!admin,
-at:Date.now()
-})
-);
-
-
-if(data?.items){
-
-localStorage.setItem(
-ITEMS_KEY,
-JSON.stringify(data.items)
-);
-
-
-for(
-const x of data.items
-){
-
-if(!x||!x.token)
-continue;
-
-const n=
-String(
-x.name||""
-).toLowerCase();
-
-
-if(n.includes("radio")){
-
-localStorage.setItem(
-KEYS.radio,
-x.token
-);
-
-}
-
-
-else if(
-n.includes("dash")
-){
-
-localStorage.setItem(
-KEYS.dash,
-x.token
-);
-
-}
-
-}
-
-}
-
-}
-
-
 function getAuth(){
-
-try{
-
-return JSON.parse(
-localStorage.getItem(
-AUTH_KEY
-)||"null"
-);
-
-}catch{
-
-return null;
-
+  try{ return JSON.parse(localStorage.getItem(AUTH_KEY)||"null"); }
+  catch{ return null; }
 }
-
-}
-
-
-/* =========================================================
-   SESSION
-========================================================= */
-
 function showSession(a){
-
-current=a;
-
-document
-.getElementById(
-"loginCard"
-)
-.classList
-.add("hidden");
-
-document
-.getElementById(
-"sessionCard"
-)
-.classList
-.remove("hidden");
-
-
-document
-.getElementById(
-"sessionText"
-)
-.textContent=
-a.admin
-?
-"شما به عنوان مدیر وارد شده‌اید."
-:
-"شما وارد شده‌اید.";
-
-
-document
-.getElementById(
-"viewBtn"
-)
-.classList
-.toggle(
-"hidden",
-!a.admin
-);
-
-
-document
-.getElementById(
-"secretBtn"
-)
-.classList
-.toggle(
-"hidden",
-!a.admin
-);
-
-
-document
-.getElementById(
-"buildBtn"
-)
-.classList
-.toggle(
-"hidden",
-!a.admin
-);
-
+  current=a;
+  document.getElementById("loginCard").classList.add("hidden");
+  document.getElementById("sessionCard").classList.remove("hidden");
+  document.getElementById("sessionText").textContent=a.admin?"شما به عنوان مدیر وارد شده‌اید.":"شما وارد شده‌اید.";
+  document.getElementById("viewBtn").classList.toggle("hidden", !a.admin);
+  document.getElementById("secretBtn").classList.toggle("hidden", !a.admin);
+  document.getElementById("buildBtn").classList.toggle("hidden", !a.admin);
 }
-
-
-/* =========================================================
-   LOGIN
-========================================================= */
-
 async function unlock(){
-
-const entered=
-document
-.getElementById(
-"pass"
-)
-.value
-.trim();
-
-
-if(!entered){
-
-toast(
-"رمز را وارد کن",
-"err"
-);
-
-return;
-
+  const entered=document.getElementById("pass").value.trim();
+  if(!entered){ toast("رمز را وارد کن","err"); return; }
+  const admin=entered.endsWith("_thisisadmin");
+  const base=admin?entered.slice(0,"_thisisadmin".length):entered;
+  const btn=document.getElementById("login");
+  btn.disabled=true;
+  btn.innerHTML=`<i class="bi bi-hourglass-split"></i> بررسی <span class="spinner"></span>`;
+  try{
+    const pack=await loadPack();
+    const data=await decrypt(base, pack);
+    items=Array.isArray(data.items)?data.items:[];
+    if(admin){
+      apiToken=data.dispatch||"";
+      if(!apiToken) throw Error("VAULT_TOKEN پیدا نشد");
+      localStorage.setItem(VAULT_TOKEN_KEY, apiToken);
+      localStorage.setItem(ITEMS_KEY, JSON.stringify(items));
+    }
+    saveAuth(admin, data);
+    showSession({ admin });
+    toast("ورود موفق بود","ok");
+    document.getElementById("pass").value="";
+  }catch(e){
+    toast(e.message||"رمز اشتباه است","err");
+  }finally{
+    btn.disabled=false;
+    btn.innerHTML=`<i class="bi bi-unlock"></i> ورود`;
+  }
 }
-
-
-const admin=
-entered.endsWith(
-"_thisisadmin"
-);
-
-
-const base=
-admin
-?
-entered.slice(
-0,
--"_thisisadmin".length
-)
-:
-entered;
-
-
-const btn=
-document.getElementById(
-"login"
-);
-
-btn.disabled=true;
-
-btn.innerHTML=
-`
-<i class="bi bi-hourglass-split"></i>
-بررسی
-<span class="spinner"></span>
-`;
-
-
-try{
-
-const pack=
-await loadPack();
-
-const data=
-await decrypt(
-base,
-pack
-);
-
-
-items=
-Array.isArray(
-data.items
-)
-?
-data.items
-:
-[];
-
-
-/*
-   ADMIN API TOKEN
-*/
-
-if(admin){
-
-apiToken=
-data.dispatch||"";
-
-
-if(!apiToken){
-
-throw Error(
-"VAULT_TOKEN پیدا نشد"
-);
-
-}
-
-
-/*
-   Persist admin token
-   so refresh still works.
-*/
-
-localStorage.setItem(
-VAULT_TOKEN_KEY,
-apiToken
-);
-
-localStorage.setItem(
-ITEMS_KEY,
-JSON.stringify(items)
-);
-
-}
-
-
-saveAuth(
-admin,
-data
-);
-
-
-showSession({
-admin
-});
-
-
-toast(
-"ورود موفق بود",
-"ok"
-);
-
-
-document
-.getElementById(
-"pass"
-)
-.value="";
-
-
-}catch(e){
-
-toast(
-e.message||
-"رمز اشتباه است",
-"err"
-);
-
-}finally{
-
-btn.disabled=false;
-
-btn.innerHTML=
-`
-<i class="bi bi-unlock"></i>
-ورود
-`;
-
-}
-
-}
-
-
-/* =========================================================
-   TOKEN VIEWER
-========================================================= */
-
 function showTokens(){
-
-if(!current?.admin)
-return;
-
-
-const box=
-document.getElementById(
-"tokens"
-);
-
-box.classList.remove(
-"hidden"
-);
-
-
-box.innerHTML=
-items.length
-
-?
-
-items.map(x=>`
-
-<div>
-
-<b>
-<i class="bi bi-key-fill"></i>
-${esc(x.name||"توکن")}
-</b>
-
-<div class="token">
-${esc(x.token||"")}
-</div>
-
-</div>
-
-`).join("")
-
-:
-
-`
-<p class="muted">
-<i class="bi bi-info-circle"></i>
-توکنی پیدا نشد.
-</p>
-`;
-
+  if(!current?.admin) return;
+  const box=document.getElementById("tokens");
+  const inner=document.getElementById("tokensInner");
+  const btn=document.getElementById("viewBtn");
+  if(box.classList.contains("open")){
+    box.classList.remove("open");
+    btn.classList.remove("is-open");
+    btn.innerHTML=`<i class="bi bi-key"></i> مشاهده توکن‌ها`;
+    return;
+  }
+  inner.innerHTML=items.length
+    ? items.map(x=>`<div><b><i class="bi bi-key-fill"></i> ${esc(x.name||"توکن")}</b><div class="token">${esc(x.token||"")}</div></div>`).join("")
+    : `<p class="muted"><i class="bi bi-info-circle"></i> توکنی پیدا نشد.</p>`;
+  btn.classList.add("is-open");
+  btn.innerHTML=`<i class="bi bi-eye-slash"></i> بستن توکن‌ها`;
+  requestAnimationFrame(()=> box.classList.add("open"));
 }
-
-
-/* =========================================================
-   SECRET EDITOR
-========================================================= */
-
 function toggleSecrets(){
-
-if(!current?.admin)
-return;
-
-
-document
-.getElementById(
-"secretEditor"
-)
-.classList
-.toggle(
-"hidden"
-);
-
+  if(!current?.admin) return;
+  document.getElementById("secretEditor").classList.toggle("hidden");
 }
-
-
-/* =========================================================
-   GITHUB PUBLIC KEY
-========================================================= */
-
 async function getPublicKey(){
-
-const url=
-`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/actions/secrets/public-key`;
-
-
-const r=
-await fetch(
-url,
-{
-headers:{
-"Authorization":
-"Bearer "+apiToken,
-
-"Accept":
-"application/vnd.github+json",
-
-"X-GitHub-Api-Version":
-"2022-11-28"
+  const url=`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/actions/secrets/public-key`;
+  const r=await fetch(url,{ headers:{ "Authorization":"Bearer "+apiToken, "Accept":"application/vnd.github+json", "X-GitHub-Api-Version":"2022-11-28" } });
+  let data={}; try{ data=await r.json(); }catch{}
+  if(!r.ok) throw Error(data.message||"دریافت کلید GitHub ناموفق بود");
+  return data;
 }
+async function encryptSecret(value, publicKey){
+  await sodium.ready;
+  const keyBytes=sodium.from_base64(publicKey.key, sodium.base64_variants.ORIGINAL);
+  const encrypted=sodium.crypto_box_seal(new TextEncoder().encode(value), keyBytes);
+  return sodium.to_base64(encrypted, sodium.base64_variants.ORIGINAL);
 }
-);
-
-
-let data={};
-
-try{
-
-data=
-await r.json();
-
-}catch{}
-
-
-if(!r.ok){
-
-throw Error(
-data.message||
-"دریافت کلید GitHub ناموفق بود"
-);
-
+async function updateSecret(name, value, publicKey){
+  const encrypted=await encryptSecret(value, publicKey);
+  const url=`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/actions/secrets/${name}`;
+  const r=await fetch(url,{
+    method:"PUT",
+    headers:{ "Authorization":"Bearer "+apiToken, "Accept":"application/vnd.github+json", "X-GitHub-Api-Version":"2022-11-28", "Content-Type":"application/json" },
+    body:JSON.stringify({ encrypted_value:encrypted, key_id:publicKey.key_id })
+  });
+  let data={}; try{ data=await r.json(); }catch{}
+  if(!r.ok) throw Error(data.message||`خطا در ذخیره ${name}`);
 }
-
-
-return data;
-
-}
-
-
-/* =========================================================
-   ENCRYPT SECRET
-========================================================= */
-
-async function encryptSecret(
-value,
-publicKey
-){
-
-await sodium.ready;
-
-
-const keyBytes=
-sodium.from_base64(
-publicKey.key,
-sodium.base64_variants.ORIGINAL
-);
-
-
-const encrypted=
-sodium.crypto_box_seal(
-new TextEncoder().encode(value),
-keyBytes
-);
-
-
-return sodium.to_base64(
-encrypted,
-sodium.base64_variants.ORIGINAL
-);
-
-}
-
-
-/* =========================================================
-   UPDATE SECRET
-========================================================= */
-
-async function updateSecret(
-name,
-value,
-publicKey
-){
-
-const encrypted=
-await encryptSecret(
-value,
-publicKey
-);
-
-
-const url=
-`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/actions/secrets/${name}`;
-
-
-const r=
-await fetch(
-url,
-{
-method:"PUT",
-
-headers:{
-"Authorization":
-"Bearer "+apiToken,
-
-"Accept":
-"application/vnd.github+json",
-
-"X-GitHub-Api-Version":
-"2022-11-28",
-
-"Content-Type":
-"application/json"
-},
-
-body:JSON.stringify({
-encrypted_value:encrypted,
-key_id:publicKey.key_id
-})
-}
-);
-
-
-let data={};
-
-try{
-
-data=
-await r.json();
-
-}catch{}
-
-
-if(!r.ok){
-
-throw Error(
-data.message||
-`خطا در ذخیره ${name}`
-);
-
-}
-
-}
-
-
-/* =========================================================
-   SAVE SECRETS
-========================================================= */
-
 async function saveSecrets(){
-
-if(!current?.admin)
-return;
-
-
-const values={
-
-VAULT_PASSWORD:
-document.getElementById(
-"s_vault_password"
-).value,
-
-DASHBOARD_TOKEN:
-document.getElementById(
-"s_dashboard"
-).value,
-
-RADIO_TOKEN:
-document.getElementById(
-"s_radio"
-).value,
-
-VAULT_TOKEN:
-document.getElementById(
-"s_vault_token"
-).value
-
-};
-
-
-const changed=
-Object.values(values)
-.some(v=>v.length>0);
-
-
-if(!changed){
-
-toast(
-"حداقل یک Secret را وارد کنید",
-"err"
-);
-
-return;
-
+  if(!current?.admin) return;
+  const values={
+    VAULT_PASSWORD:document.getElementById("s_vault_password").value,
+    DASHBOARD_TOKEN:document.getElementById("s_dashboard").value,
+    RADIO_TOKEN:document.getElementById("s_radio").value,
+    VAULT_TOKEN:document.getElementById("s_vault_token").value
+  };
+  if(!Object.values(values).some(v=>v.length>0)){ toast("حداقل یک Secret را وارد کنید","err"); return; }
+  const btn=document.getElementById("saveSecretsBtn");
+  btn.disabled=true;
+  btn.innerHTML=`<i class="bi bi-hourglass-split"></i> ذخیره <span class="spinner"></span>`;
+  try{
+    const publicKey=await getPublicKey();
+    let count=0;
+    for(const name of Object.keys(values)){
+      const value=values[name];
+      if(!value) continue;
+      document.getElementById("secretStatus").textContent=`در حال ذخیره ${name}...`;
+      await updateSecret(name, value, publicKey);
+      count++;
+    }
+    if(values.VAULT_TOKEN){
+      apiToken=values.VAULT_TOKEN;
+      localStorage.setItem(VAULT_TOKEN_KEY, apiToken);
+    }
+    document.getElementById("s_vault_password").value="";
+    document.getElementById("s_dashboard").value="";
+    document.getElementById("s_radio").value="";
+    document.getElementById("s_vault_token").value="";
+    document.getElementById("secretStatus").textContent=`${count} Secret با موفقیت ذخیره شد`;
+    document.getElementById("secretStatus").className="status ok";
+    toast("Secrets ذخیره شدند","ok");
+  }catch(e){
+    document.getElementById("secretStatus").textContent=e.message||"خطا در ذخیره Secrets";
+    document.getElementById("secretStatus").className="status err";
+    toast(e.message||"خطا در ذخیره Secrets","err");
+  }finally{
+    btn.disabled=false;
+    btn.innerHTML=`<i class="bi bi-cloud-arrow-up"></i> ذخیره Secrets`;
+  }
 }
-
-
-const btn=
-document.getElementById(
-"saveSecretsBtn"
-);
-
-btn.disabled=true;
-
-btn.innerHTML=
-`
-<i class="bi bi-hourglass-split"></i>
-ذخیره
-<span class="spinner"></span>
-`;
-
-
-try{
-
-const publicKey=
-await getPublicKey();
-
-let count=0;
-
-
-for(
-const name of Object.keys(values)
-){
-
-const value=
-values[name];
-
-if(!value)
-continue;
-
-
-document
-.getElementById(
-"secretStatus"
-)
-.textContent=
-`در حال ذخیره ${name}...`;
-
-
-await updateSecret(
-name,
-value,
-publicKey
-);
-
-count++;
-
-}
-
-
-/*
-   If VAULT_TOKEN changed,
-   immediately use the new token.
-*/
-
-if(values.VAULT_TOKEN){
-
-apiToken=
-values.VAULT_TOKEN;
-
-localStorage.setItem(
-VAULT_TOKEN_KEY,
-apiToken
-);
-
-}
-
-
-document.getElementById(
-"s_vault_password"
-).value="";
-
-document.getElementById(
-"s_dashboard"
-).value="";
-
-document.getElementById(
-"s_radio"
-).value="";
-
-document.getElementById(
-"s_vault_token"
-).value="";
-
-
-document
-.getElementById(
-"secretStatus"
-)
-.textContent=
-`${count} Secret با موفقیت ذخیره شد`;
-
-document
-.getElementById(
-"secretStatus"
-)
-.className=
-"status ok";
-
-
-toast(
-"Secrets ذخیره شدند",
-"ok"
-);
-
-
-}catch(e){
-
-document
-.getElementById(
-"secretStatus"
-)
-.textContent=
-e.message||
-"خطا در ذخیره Secrets";
-
-document
-.getElementById(
-"secretStatus"
-)
-.className=
-"status err";
-
-
-toast(
-e.message||
-"خطا در ذخیره Secrets",
-"err"
-);
-
-}finally{
-
-btn.disabled=false;
-
-btn.innerHTML=
-`
-<i class="bi bi-cloud-arrow-up"></i>
-ذخیره Secrets
-`;
-
-}
-
-}
-
-
-/* =========================================================
-   BUILD VAULT
-========================================================= */
-
 async function buildVault(){
-
-if(!current?.admin)
-return;
-
-
-const confirmed=
-await customConfirm(
-"Workflow مربوط به Build Vault اجرا شود؟",
-"اجرای Build Vault"
-);
-
-
-if(!confirmed)
-return;
-
-
-try{
-
-toast(
-"در حال اجرای Workflow...",
-"ok"
-);
-
-
-const url=
-`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/actions/workflows/${CONFIG.workflow}/dispatches`;
-
-
-const r=
-await fetch(
-url,
-{
-method:"POST",
-
-headers:{
-"Authorization":
-"Bearer "+apiToken,
-
-"Accept":
-"application/vnd.github+json",
-
-"X-GitHub-Api-Version":
-"2022-11-28",
-
-"Content-Type":
-"application/json"
-},
-
-body:JSON.stringify({
-ref:CONFIG.branch
-})
+  if(!current?.admin) return;
+  const confirmed=await customConfirm("Workflow مربوط به Build Vault اجرا شود؟","اجرای Build Vault");
+  if(!confirmed) return;
+  try{
+    toast("در حال اجرای Workflow...","ok");
+    const url=`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/actions/workflows/${CONFIG.workflow}/dispatches`;
+    const r=await fetch(url,{
+      method:"POST",
+      headers:{ "Authorization":"Bearer "+apiToken, "Accept":"application/vnd.github+json", "X-GitHub-Api-Version":"2022-11-28", "Content-Type":"application/json" },
+      body:JSON.stringify({ ref:CONFIG.branch })
+    });
+    if(!r.ok){
+      let data={}; try{ data=await r.json(); }catch{}
+      throw Error(data.message||"اجرای Workflow ناموفق بود");
+    }
+    toast("Build Vault اجرا شد","ok");
+  }catch(e){
+    toast(e.message||"خطا در اجرای Workflow","err");
+  }
 }
-);
-
-
-if(!r.ok){
-
-let data={};
-
-try{
-data=await r.json();
-}catch{}
-
-
-throw Error(
-data.message||
-"اجرای Workflow ناموفق بود"
-);
-
-}
-
-
-toast(
-"Build Vault اجرا شد",
-"ok"
-);
-
-
-}catch(e){
-
-toast(
-e.message||
-"خطا در اجرای Workflow",
-"err"
-);
-
-}
-
-}
-
-
-/* =========================================================
-   LOGOUT
-========================================================= */
-
 async function askLogout(){
-
-const confirmed=
-await customConfirm(
-"از حساب خارج شوید؟",
-"خروج از حساب"
-);
-
-
-if(!confirmed)
-return;
-
-
-logout();
-
+  const confirmed=await customConfirm("از حساب خارج شوید؟","خروج از حساب");
+  if(!confirmed) return;
+  logout();
 }
-
-
-function cancelLogout(){
-
-toast(
-"حساب شما همچنان وارد است"
-);
-
-}
-
-
+function cancelLogout(){ toast("حساب شما همچنان وارد است"); }
 function logout(){
-
-localStorage.removeItem(
-AUTH_KEY
-);
-
-localStorage.removeItem(
-ITEMS_KEY
-);
-
-localStorage.removeItem(
-KEYS.dash
-);
-
-localStorage.removeItem(
-KEYS.radio
-);
-
-localStorage.removeItem(
-VAULT_TOKEN_KEY
-);
-
-
-current=null;
-items=[];
-apiToken="";
-
-
-document
-.getElementById(
-"tokens"
-)
-.classList
-.add("hidden");
-
-
-document
-.getElementById(
-"tokens"
-)
-.innerHTML="";
-
-
-document
-.getElementById(
-"secretEditor"
-)
-.classList
-.add("hidden");
-
-
-document
-.getElementById(
-"sessionCard"
-)
-.classList
-.add("hidden");
-
-
-document
-.getElementById(
-"loginCard"
-)
-.classList
-.remove("hidden");
-
-
-document
-.getElementById(
-"pass"
-)
-.value="";
-
-
-toast(
-"خارج شدی",
-"ok"
-);
-
+  localStorage.removeItem(AUTH_KEY);
+  localStorage.removeItem(ITEMS_KEY);
+  localStorage.removeItem(KEYS.dash);
+  localStorage.removeItem(KEYS.radio);
+  localStorage.removeItem(VAULT_TOKEN_KEY);
+  current=null; items=[]; apiToken="";
+  document.getElementById("tokens").classList.remove("open");
+  document.getElementById("tokensInner").innerHTML="";
+  const viewBtn=document.getElementById("viewBtn");
+  if(viewBtn){
+    viewBtn.classList.remove("is-open");
+    viewBtn.innerHTML=`<i class="bi bi-key"></i> مشاهده توکن‌ها`;
+  }
+  document.getElementById("secretEditor").classList.add("hidden");
+  document.getElementById("sessionCard").classList.add("hidden");
+  document.getElementById("loginCard").classList.remove("hidden");
+  document.getElementById("pass").value="";
+  toast("خارج شدی","ok");
 }
-
-
-/* =========================================================
-   ESCAPE
-========================================================= */
-
 function esc(s){
-
-return String(s??"")
-.replaceAll(
-"&",
-"&amp;"
-)
-.replaceAll(
-"<",
-"&lt;"
-)
-.replaceAll(
-">",
-"&gt;"
-)
-.replaceAll(
-'"',
-"&quot;"
-)
-.replaceAll(
-"'",
-"&#039;"
-);
-
+  return String(s??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
 }
-
-
-/* =========================================================
-   RESTORE SESSION
-========================================================= */
-
 (function restore(){
-
-const a=
-getAuth();
-
-
-if(!a?.loggedIn)
-return;
-
-
-/*
-   Normal user
-*/
-
-if(!a.admin){
-
-showSession({
-admin:false
-});
-
-return;
-
-}
-
-
-/*
-   Admin
-*/
-
-const savedToken=
-localStorage.getItem(
-VAULT_TOKEN_KEY
-);
-
-
-const savedItems=
-localStorage.getItem(
-ITEMS_KEY
-);
-
-
-if(!savedToken){
-
-localStorage.removeItem(
-AUTH_KEY
-);
-
-return;
-
-}
-
-
-apiToken=
-savedToken;
-
-
-if(savedItems){
-
-try{
-
-items=
-JSON.parse(
-savedItems
-)||[];
-
-}catch{
-
-items=[];
-
-}
-
-}
-
-
-showSession({
-admin:true
-});
-
+  const a=getAuth();
+  if(!a?.loggedIn) return;
+  if(!a.admin){ showSession({ admin:false }); return; }
+  const savedToken=localStorage.getItem(VAULT_TOKEN_KEY);
+  const savedItems=localStorage.getItem(ITEMS_KEY);
+  if(!savedToken){ localStorage.removeItem(AUTH_KEY); return; }
+  apiToken=savedToken;
+  if(savedItems){ try{ items=JSON.parse(savedItems)||[]; }catch{ items=[]; } }
+  showSession({ admin:true });
 })();
-
-
-/* =========================================================
-   ENTER KEY
-========================================================= */
-
-document
-.getElementById(
-"pass"
-)
-.addEventListener(
-"keydown",
-e=>{
-
-if(e.key==="Enter")
-unlock();
-
-});
-
+document.getElementById("pass").addEventListener("keydown", e=>{ if(e.key==="Enter") unlock(); });
 </script>
-
 </body>
    </html>
